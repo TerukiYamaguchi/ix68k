@@ -410,12 +410,19 @@ if(WIN32)
     # ツールチェーン依存（mingw-w64は古い系列だと0x0502）なので明示する。
     target_compile_definitions(ix68k PRIVATE _WIN32_WINNT=0x0A00 WINVER=0x0A00)
 endif()
-# 開発ビルド（.app外）でDockアイコンを設定するための icns パスを埋め込む。ビルド環境の
-# 絶対パスがバイナリに入るため、配布ビルド（packaging/release/stage.sh）はOFFにする。
-option(X68K_DEV_DOCK_ICON "開発ビルドでDockアイコンのicnsパスを埋め込む（macOS）" ON)
-if(APPLE AND NOT PLATFORM_NULL AND X68K_DEV_DOCK_ICON)
-    target_compile_definitions(ix68k PRIVATE
-        X68K_DEV_ICON_PATH="${CMAKE_SOURCE_DIR}/packaging/icons/macos/AppIcon.icns")
+# 開発ビルド（.app外）でDockアイコンを設定するための icns パス。ONはビルド環境の絶対パスを
+# 埋め込む。配布ビルド（packaging/release/stage.sh）はOFFにして、リポジトリ直下からの相対
+# パスにする（絶対パスをバイナリに入れない）。OFFでも定義自体は残すのは、
+# pal_macos_set_dev_dock_icon() の形をONと同じに保ち、PGOプロファイルの照合（関数の形で
+# 照合する）が不一致にならないようにするため。
+option(X68K_DEV_DOCK_ICON "開発ビルドでDockアイコンのicnsの絶対パスを埋め込む（macOS）" ON)
+if(APPLE AND NOT PLATFORM_NULL)
+    if(X68K_DEV_DOCK_ICON)
+        set(X68K_DEV_ICON_PATH_VALUE "${CMAKE_SOURCE_DIR}/packaging/icons/macos/AppIcon.icns")
+    else()
+        set(X68K_DEV_ICON_PATH_VALUE "packaging/icons/macos/AppIcon.icns")
+    endif()
+    target_compile_definitions(ix68k PRIVATE X68K_DEV_ICON_PATH="${X68K_DEV_ICON_PATH_VALUE}")
 endif()
 if(MSVC)
     target_compile_options(ix68k PRIVATE /W4)
