@@ -67,6 +67,13 @@ if(MSVC)
     target_compile_options(sram_switch PRIVATE /utf-8)
 endif()
 
+# cgrom_gen: ビットマップフォント(BDF)から互換CGROMを作るCLI。Windowsのリリースzipにも入れる。
+add_executable(cgrom_gen tools-host/cgrom_gen/cgrom_gen.c)
+if(MSVC)
+    target_compile_definitions(cgrom_gen PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(cgrom_gen PRIVATE /utf-8)
+endif()
+
 if(X68K_PGO_GENERATE OR X68K_PGO_PROFILE)
     if(X68K_PGO_GENERATE AND X68K_PGO_PROFILE)
         message(FATAL_ERROR "X68K_PGO_GENERATE and X68K_PGO_PROFILE are mutually exclusive")
@@ -1332,6 +1339,14 @@ target_include_directories(cgrom_upper_test PRIVATE src include)
 target_compile_definitions(cgrom_upper_test PRIVATE X68K_REPO_ROOT="${CMAKE_SOURCE_DIR}")
 target_link_libraries(cgrom_upper_test PRIVATE mc68000 ${ICONV_LIBRARY})
 add_test(NAME cgrom_upper_test COMMAND cgrom_upper_test)
+
+# cgrom_gen（BDFから互換CGROMを生成するツール）の単体テスト。合成した小さなBDFを使う。
+add_executable(cgrom_gen_test tests/cgrom_gen_test.c)
+if(MSVC)
+    target_compile_definitions(cgrom_gen_test PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(cgrom_gen_test PRIVATE /utf-8)
+endif()
+add_test(NAME cgrom_gen_test COMMAND cgrom_gen_test)
 
 # 拡張スロット領域($EA0000-$EAFFFF)の読み出しデコードの単体テスト。
 # HOSTDRV/HOSTFILEの裏口レジスタとRTCテストバイトがread8経路で実体に届くことを確認する

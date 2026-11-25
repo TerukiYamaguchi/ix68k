@@ -6,7 +6,7 @@
 
 ## バージョン
 
-`aiq-bridge` は 0.9、そのほか（`mcp/`、`ix68k-hostfile`、`cgrom_gen`、`hu68disk`、`sram_switch`）は 1.0 です。
+`aiq-bridge` は 0.9、`cgrom_gen` は 2.0、そのほか（`mcp/`、`ix68k-hostfile`、`hu68disk`、`sram_switch`）は 1.0 です。
 各コマンドは `--version` で表示します（`hu68disk` と `sram_switch` は `-V` も可）。外部デバッガ `debugger/` も 1.0 です。
 
 ## 配布物に入るもの
@@ -15,7 +15,7 @@
 |---|---|
 | `mcp/` | MCPサーバーとそのPython/uv依存定義。設定手順は `docs/x68k-usage/mcp/mcp_llm_setup.md` を参照。 |
 | `ix68k-hostfile/` | ホストとHuman68k間で単一ファイルを転送するCLI。ZIPにはPyInstallerで固めた実行ファイルを入れる。 |
-| `cgrom_gen/` | フォントから互換CGROMを生成する。 |
+| `cgrom_gen/` | ビットマップフォント（BDF）から互換CGROMを生成する。 |
 | `aiq-bridge/` | AIQ.X のホスト側ブリッジ（LLMでコマンド列を作る）。Pythonのスクリプトのまま入れる。macOS / Linuxのみ。 |
 | `hu68disk/` | ディスクイメージ（XDF/HDS）の操作ツール。ZIPにはビルド済みバイナリを入れる。macOS / Linuxのみ。 |
 | `sram_switch/` | `sram.dat` のメモリスイッチ設定（オフライン）。ZIPにはビルド済みバイナリを入れる。macOS / Linuxのみ。 |

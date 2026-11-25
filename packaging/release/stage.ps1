@@ -193,17 +193,13 @@ function Stage-X68kTool($Dir, $Src, $FileName) {
     Copy-Item (Join-Path (Split-Path $Src) "README.TXT") (Join-Path $dest "README.TXT")
 }
 
-# CGROM生成ツール（互換CGROMを作る人向け）。PyInstallerで固めるので、利用者にPythonやPillowは要らない。
-# Build-HostfileCli が作った $VenvDir を使う。
-function Build-CgromGenCli {
-    $py = Join-Path $VenvDir "Scripts\python.exe"
-    Invoke-Native $py @("-m", "pip", "install", "--quiet", "pillow")
-    Invoke-Native $py @("-m", "PyInstaller", "--onefile", "--name", "ix68k-cgrom-gen",
-        "--distpath", (Join-Path $PyiDir "dist"), "--workpath", (Join-Path $PyiDir "work"),
-        "--specpath", $PyiDir, "--log-level", "WARN", (Join-Path $Root "tools-host\cgrom_gen\cgrom_gen.py"))
+# cgrom_gen: CMake でビルド済みの cgrom_gen.exe を tools-host\cgrom_gen\ へ置く（BDFから互換CGROMを作る）
+function Stage-CgromGen {
+    $exe = Join-Path $BuildDir "cgrom_gen.exe"
+    if (-not (Test-Path $exe)) { Die "cgrom_gen.exe が無い: $exe" }
     $dest = Join-Path $PkgDir "$ToolsHostDir\cgrom_gen"
     New-Item -ItemType Directory -Force $dest | Out-Null
-    Copy-Item (Join-Path $PyiDir "dist\ix68k-cgrom-gen.exe") $dest
+    Copy-Item $exe $dest
     Copy-Item (Join-Path $Root "tools-host\cgrom_gen\README.md") $dest
 }
 
@@ -236,7 +232,7 @@ function Assemble-Package {
     Stage-X68kTool "fntadr" $FntadrX "FNTADR.X"
     if (-not (Test-Path $BlankXdf)) { Die "BLANK.XDF が無い: $BlankXdf" }
     Copy-Item $BlankXdf (Join-Path $PkgDir "disk\BLANK.XDF")
-    Build-CgromGenCli
+    Stage-CgromGen
     Stage-Mcp
     Copy-Item (Join-Path $Root "LICENSES") $PkgDir -Recurse
     Copy-Item (Join-Path $Root "profiles\ix68k.cfg.example"), (Join-Path $Root "profiles\keyboard.cfg.example") $PkgDir
@@ -285,7 +281,7 @@ function Verify-Zip {
         "tools-x68k\ged\README.TXT", "tools-x68k\aiq\README.TXT", "tools-x68k\fntadr\README.TXT", "LICENSES\ymfm-BSD-3-Clause.txt", "LICENSES\SoftFloat-BSD-3-Clause.txt", "LICENSES\XEiJ-License.txt", "LICENSES\Sharp-Products-Users-Forum-License.txt", "ix68k.cfg.example", "keyboard.cfg.example", "README.md", ".mcp.json",
         "tools-host\mcp\ix68k_mcp_server.py", "tools-host\mcp\ix68k_wire.py", "tools-host\mcp\pyproject.toml", "tools-host\mcp\uv.lock",
         "tools-host\mcp\MCP_TOOLS.md", "tools-host\mcp\text_profiles", "tools-host\mcp\README.md",
-        "tools-host\cgrom_gen\ix68k-cgrom-gen.exe", "tools-host\cgrom_gen\README.md",
+        "tools-host\cgrom_gen\cgrom_gen.exe", "tools-host\cgrom_gen\README.md",
         "rom", "disk\BLANK.XDF", "docs\x68k-usage")
     foreach ($p in $required) {
         if (-not (Test-Path (Join-Path $pkg $p))) { Die "ZIPに必要なパスが無い: $p" }
@@ -314,6 +310,7 @@ function Verify-Zip {
         Die "未解決の依存DLL: $dll"
     }
     Invoke-Native (Join-Path $pkg "$ToolsHostDir\ix68k-hostfile\ix68k-hostfile.exe") @("--help") | Out-Null
+    Invoke-Native (Join-Path $pkg "$ToolsHostDir\cgrom_gen\cgrom_gen.exe") @("--version") | Out-Null
     # hu68disk: 空イメージ作成→日本語名ファイル追加→取り出しの往復で動作を確認する
     $hu = Join-Path $checkDir "hu68disk_smoke"
     New-Item -ItemType Directory $hu | Out-Null

@@ -33,22 +33,24 @@ IPLROM、CGROM、Human68kのディスクイメージは著作権の都合で同�
 | --- | --- |
 | IPLROM（`IPLROM.DAT`） | 実機から吸い出す（[XEiJ: IPLROMの作り方](https://stdkmd.net/xeij/iplrom16.htm)）。または[retropc.net](http://retropc.net/x68000/software/)の`X68BIOSX.LZH`を展開して使う |
 | Human68k（`HUMAN302.XDF`） | [retropc.net](http://retropc.net/x68000/software/)の`HUMN302I.LZH`を展開して使う |
-| CGROM（`CGROM.DAT`） | 実機から吸い出す。または`tools-host/cgrom_gen/ix68k-cgrom-gen`で互換CGROMを生成する（下記） |
+| CGROM（`CGROM.DAT`） | 実機から吸い出す。または`tools-host/cgrom_gen/cgrom_gen`でビットマップフォント（BDF）から互換CGROMを生成する（下記） |
 
 LZHの展開には、7-Zipや`unar`などを使います。
 
-互換CGROMは、パブリックドメインの[東雲フォント](http://jikasei.me/font/jf-dotfont/)
-（`jfdotfont-20150527.zip`、約40MB）などから生成できます。ZIPを展開し、中のフォントファイルを
-指定します。PythonやPillowは要りません。詳しくは`tools-host/cgrom_gen/README.md`を参照してください。
+互換CGROMは、パブリックドメインの東雲フォントのBDF（`shinonome-0.9.11p1.tar.bz2`の`bdf/`、
+<http://openlab.jp/efont/dist/shinonome/shinonome-0.9.11p1.tar.bz2>）などから生成できます。
+アーカイブを展開し、中のBDFファイルを指定します。詳しくは`tools-host/cgrom_gen/README.md`を
+参照してください。
 
 ```sh
-# Windows は ix68k-cgrom-gen.exe
-tools-host/cgrom_gen/ix68k-cgrom-gen \
-  --gothic "<ゴシック体フォントのパス>" --mincho "<明朝体フォントのパス>" \
+# Windows は cgrom_gen.exe
+tools-host/cgrom_gen/cgrom_gen \
+  --k16 "<shnmk16.bdfのパス>" --a8x16 "<shnm8x16r.bdfのパス>" \
   --output rom/CGROM.DAT
 ```
 
-`--gothic`と`--mincho`を省略すると、OS標準のフォントで生成します（文字が粗くなります）。
+東雲フォントで作れるのは、16x16漢字と8x16半角です。ほかのサイズ（8x8、12x12、12x24、24x24）は
+空白になります。
 
 ### 配置する
 

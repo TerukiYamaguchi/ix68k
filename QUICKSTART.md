@@ -38,13 +38,14 @@ ix68kを初めて起動するまでの手順です。ix68kの概要は [README.m
   [XEiJ: IPLROMの作り方](https://stdkmd.net/xeij/iplrom16.htm)を参照してください。
 - **STUDIO KAMADA**: SHARPが公式に無償配布を許諾したIPLROM・`HUMAN302.XDF`が
   [retropc.net/x68000/software/](http://retropc.net/x68000/software/)で公開されています。
-- **CGROM**: 実機から吸い出したCGROMを使うか、権利上問題のない手元フォントから
-  [`tools-host/cgrom_gen/`](tools-host/cgrom_gen/)で互換CGROMを生成してください。
+- **CGROM**: 実機から吸い出したCGROMを使うか、パブリックドメインの東雲フォントなどの
+  ビットマップフォント（BDF）から[`tools-host/cgrom_gen/`](tools-host/cgrom_gen/)で
+  互換CGROMを生成してください。
 
-生成例（リポジトリを取得して実行します）:
+生成例（東雲フォントのBDFを展開したフォルダで実行します。作れるのは16x16漢字と8x16半角です）:
 
 ```sh
-python3 tools-host/cgrom_gen/cgrom_gen.py --output rom/CGROM.DAT
+tools-host/cgrom_gen/cgrom_gen --k16 shnmk16.bdf --a8x16 shnm8x16r.bdf --output rom/CGROM.DAT
 ```
 
 次のように配置します。

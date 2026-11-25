@@ -177,26 +177,14 @@ build_hostfile_cli() {
     cp "$ROOT/tools-host/ix68k-hostfile/README.md" "$dest/$TOOLS_HOST_DIR/ix68k-hostfile/README.md"
 }
 
-# CGROM生成ツール（互換CGROMを作る人向け）。PyInstallerで固めるので、利用者にPythonやPillowは要らない。
-# build_hostfile_cli が作った $VENV_DIR を使う。
-build_cgrom_gen_cli() {
-    local dest="$1"
-    "$VENV_DIR/bin/pip" install --quiet pillow
-    "$VENV_DIR/bin/pyinstaller" --onefile --name ix68k-cgrom-gen \
-        --distpath "$PYI_DIR/dist" --workpath "$PYI_DIR/work" --specpath "$PYI_DIR" \
-        --log-level WARN "$ROOT/tools-host/cgrom_gen/cgrom_gen.py"
-    mkdir -p "$dest/$TOOLS_HOST_DIR/cgrom_gen"
-    cp "$PYI_DIR/dist/ix68k-cgrom-gen" "$dest/$TOOLS_HOST_DIR/cgrom_gen/"
-    cp "$ROOT/tools-host/cgrom_gen/README.md" "$dest/$TOOLS_HOST_DIR/cgrom_gen/README.md"
-}
-
 # ホストOS用の補助ツール（macOS / Linux のみ。いずれもPOSIX前提）。
 #   hu68disk    : ディスクイメージの操作。Makefileでビルドしたバイナリを入れる（ZIPにソースは入れない）
 #   sram_switch : sram.dat のメモリスイッチ設定。同上
+#   cgrom_gen   : ビットマップフォント(BDF)から互換CGROMを生成する。同上
 #   aiq-bridge  : AIQ.X のホスト側ブリッジ。Python（標準ライブラリのみ）なのでスクリプトのまま入れる
 stage_host_tools() {
     local pkg_dir="$1" dest="$pkg_dir/$TOOLS_HOST_DIR" tool
-    for tool in hu68disk sram_switch; do
+    for tool in hu68disk sram_switch cgrom_gen; do
         make -B -C "$ROOT/$TOOLS_HOST_DIR/$tool" > /dev/null
         mkdir -p "$dest/$tool"
         cp "$ROOT/$TOOLS_HOST_DIR/$tool/$tool" "$ROOT/$TOOLS_HOST_DIR/$tool/README.md" "$dest/$tool/"
@@ -236,7 +224,6 @@ assemble_package() {
     stage_x68k_tool "$pkg_dir" aiq "$AIQ_X" AIQ.X
     stage_x68k_tool "$pkg_dir" fntadr "$FNTADR_X" FNTADR.X
     cp "$BLANK_XDF" "$pkg_dir/disk/BLANK.XDF"
-    build_cgrom_gen_cli "$pkg_dir"
     stage_mcp "$pkg_dir"
     stage_host_tools "$pkg_dir"
     cp -R "$ROOT/LICENSES" "$pkg_dir/"
@@ -316,7 +303,7 @@ verify_zip() {
         "tools-host/hu68disk/hu68disk" "tools-host/hu68disk/README.md" "tools-host/sram_switch/sram_switch"
         "tools-host/sram_switch/README.md" "tools-host/aiq-bridge/aiq_bridge.py" "tools-host/aiq-bridge/docs_search.py"
         "tools-host/aiq-bridge/prompts/system.md" "tools-host/aiq-bridge/README.md"
-        "tools-host/cgrom_gen/ix68k-cgrom-gen" "tools-host/cgrom_gen/README.md"
+        "tools-host/cgrom_gen/cgrom_gen" "tools-host/cgrom_gen/README.md"
         "rom" "disk" "docs/x68k-usage"
     )
     local path
@@ -352,6 +339,7 @@ verify_zip() {
         die "ix68kにビルド環境のパス（$ROOT）が埋め込まれている"
     fi
     "$pkg/$TOOLS_HOST_DIR/ix68k-hostfile/ix68k-hostfile" --help > /dev/null || die "ix68k-hostfile --help が失敗"
+    "$pkg/$TOOLS_HOST_DIR/cgrom_gen/cgrom_gen" --version > /dev/null || die "cgrom_gen --version が失敗"
     # hu68disk: 空イメージ作成→ファイル追加→取り出しの往復で動作を確認する
     local hu="$pkg/$TOOLS_HOST_DIR/hu68disk/hu68disk" hu_tmp="$check_dir/hu68disk_smoke"
     mkdir -p "$hu_tmp"

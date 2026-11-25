@@ -78,14 +78,14 @@ Claude Code や LM Studio 等、**ホストのシェルコマンドを実行で�
 
 - 「はい」等ならQ3-2へ進みます。
 - 「いいえ」「持っていない」「わからない」等（既定）なら、Step 4-2で
-  `tools-host/cgrom_gen/cgrom_gen.py`により東雲フォントから生成します。
+  `tools-host/cgrom_gen/cgrom_gen`により東雲フォント（BDF）から生成します。
 
 #### Q3-2（Q3で「はい」の場合のみ）. そのファイルの絶対パスを教えてください
 
 > CGROM互換データの絶対パスを教えてください。
 
 - ファイルサイズが786432バイトでなければ、正しいファイルか確認を促す
-  （`cgrom_gen.py`が出力するCGROMも実機の`CGROM.DAT`も必ずこのサイズになる）。
+  （`cgrom_gen`が出力するCGROMも実機の`CGROM.DAT`も必ずこのサイズになる）。
 
 ---
 
@@ -134,8 +134,8 @@ cp tools-host/sram_switch/sram_switch <Q1のディレクトリ>/
 
 IPLROM・HUMAN302.XDFは著作権者（シャープ／STUDIO KAMADA・鎌田誠氏）がretropc.netで
 無償公開しているものをダウンロードします。CGROMは著作権上フリー配布されていないため、
-Q3の回答に応じて「手持ちのファイルをコピー」または「`tools-host/cgrom_gen/cgrom_gen.py`で
-東雲フォントから生成」のいずれかで用意する（詳細は4-2参照）。
+Q3の回答に応じて「手持ちのファイルをコピー」または「`tools-host/cgrom_gen/cgrom_gen`で
+東雲フォントのBDFから生成」のいずれかで用意する（詳細は4-2参照）。
 
 ### 4-1. IPLROM（retropc.net、動作検証済み・MD5一致確認済み 2026-08-14）
 
@@ -161,38 +161,36 @@ Q3で回答が分岐します。いずれの経路でも最終的に`<Q1のデ�
 cp <Q3-2で聞いたパス> <Q1のディレクトリ>/rom/CGROM.DAT
 ```
 
-#### Q3で「いいえ」の場合: 東雲フォントから生成する（動作検証済み 2026-08-14）
+#### Q3で「いいえ」の場合: 東雲フォントから生成する
 
-`tools-host/cgrom_gen/cgrom_gen.py`はゴシック体・明朝体フォント（TTF/OTF/TTC）から実機互換の
-CGROMを合成するクリーンルーム実装ツール（*Inside X68000* p.218-226のCGROMアドレス配置仕様に基づきます。
-他エミュレータ/ツールのソースは参照・移植していない）。
-フォント自体は著作権の都合上どこにも同梱せず、都度ユーザー手元のフォントを指定します。
+`tools-host/cgrom_gen/cgrom_gen`は、ビットマップフォント（BDF）から実機互換のCGROMを合成する
+クリーンルーム実装のC製ツール（*Inside X68000* p.218-226のCGROMアドレス配置仕様に基づきます。
+他エミュレータ/ツールのソースは参照・移植していない）。フォント自体は著作権の都合上どこにも同梱せず、
+都度ユーザー手元のフォントを指定します。
 
-OS標準フォント（ヒラギノ角ゴ/明朝、MS ゴシック/明朝等、`--gothic`/`--mincho`省略時に
-自動検出される）はアウトラインフォントのため、CGROMのような極小サイズに縮小すると
-輪郭がぶれて読みにくい。**東雲フォント**（パブリックドメイン、16x16専用設計）を使うと
-実機に近い読みやすさになることを比較検証済み
-（`tools-host/cgrom_gen/README.md`「推奨フォント」節参照）。
+**東雲フォント**（パブリックドメイン）のBDFで作れるのは、16x16漢字と8x16半角です。
+ほかのサイズ（8x8、12x12、12x24、24x24）は空白のまま出力されます
+（`tools-host/cgrom_gen/README.md`参照）。
 
 ```sh
-mkdir -p arc/ftp.iij.ad.jp/pub/osdn.jp/users/8/8542
-[ -f arc/ftp.iij.ad.jp/pub/osdn.jp/users/8/8542/jfdotfont-20150527.zip ] || \
-  curl -L -o arc/ftp.iij.ad.jp/pub/osdn.jp/users/8/8542/jfdotfont-20150527.zip \
-    "https://ftp.iij.ad.jp/pub/osdn.jp/users/8/8542/jfdotfont-20150527.zip"
+mkdir -p arc/openlab.jp/efont/dist/shinonome
+[ -f arc/openlab.jp/efont/dist/shinonome/shinonome-0.9.11p1.tar.bz2 ] || \
+  curl -L -o arc/openlab.jp/efont/dist/shinonome/shinonome-0.9.11p1.tar.bz2 \
+    "http://openlab.jp/efont/dist/shinonome/shinonome-0.9.11p1.tar.bz2"
 
 mkdir -p /tmp/shinonome_extract
-unzip -o -j arc/ftp.iij.ad.jp/pub/osdn.jp/users/8/8542/jfdotfont-20150527.zip \
-  "JF-Dot-Shinonome16.ttf" "JF-Dot-ShinonomeMin16.ttf" -d /tmp/shinonome_extract
+tar -xjf arc/openlab.jp/efont/dist/shinonome/shinonome-0.9.11p1.tar.bz2 -C /tmp/shinonome_extract \
+  shinonome-0.9.11/bdf/shnmk16.bdf shinonome-0.9.11/bdf/shnm8x16r.bdf
 
-python3 tools-host/cgrom_gen/cgrom_gen.py \
-  --gothic /tmp/shinonome_extract/JF-Dot-Shinonome16.ttf \
-  --mincho /tmp/shinonome_extract/JF-Dot-ShinonomeMin16.ttf \
+make -C tools-host/cgrom_gen
+tools-host/cgrom_gen/cgrom_gen \
+  --k16 /tmp/shinonome_extract/shinonome-0.9.11/bdf/shnmk16.bdf \
+  --a8x16 /tmp/shinonome_extract/shinonome-0.9.11/bdf/shnm8x16r.bdf \
   --output <Q1のディレクトリ>/rom/CGROM.DAT
 ```
 
-生成に数秒で完了します。出力は必ず786432バイト（`0xC0000`）になる（`assert`で検証済み）。
-自動検出フォント（`--gothic`/`--mincho`省略）を使いたい場合は`tools-host/cgrom_gen/README.md`
-の「フォントの自動検出」節を参照。
+生成は1秒もかからず、出力は必ず786432バイト（`0xC0000`）になります。Windowsでは`make`の代わりに
+CMakeで`cgrom_gen`ターゲットをビルドします（`docs/ix68k-internals/build.md`参照）。
 
 ### 4-3. Human68k v3.02 ブートディスク（retropc.net、動作検証済み・MD5一致確認済み 2026-08-14）
 
@@ -294,6 +292,6 @@ MCPサーバ経由で操作可能な場合は`screenshot`ツール等でHuman68k
   ディスクイメージは`disk/<ファイル名>`とする。詳細は同docsの「コマンドのパスについて」参照）。
 - ROM・HUMAN302.XDFは著作権上リポジトリに同梱されていない（[QUICKSTART](../../../../QUICKSTART.md)参照）。本手順は
   それらを都度取得する前提。
-- CGROMは既存ファイルを持っていなければ`tools-host/cgrom_gen/cgrom_gen.py`（東雲フォント使用）で
+- CGROMは既存ファイルを持っていなければ`tools-host/cgrom_gen/cgrom_gen`（東雲フォントのBDF使用）で
   その場生成する（フォントはリポジトリに同梱しない）。詳細・トラブルシュートは
   `tools-host/cgrom_gen/README.md`参照。

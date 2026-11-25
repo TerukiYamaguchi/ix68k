@@ -41,7 +41,7 @@ Release workflow・CMakeの `install()` 規則・配布用READMEはこのファ�
 | `tools-x68k/ged/` | `GED.X`（`tools-x68k/ged/GED.X`）と `README.TXT` | MCPからHuman68k上のテキストファイルを編集するため |
 | `tools-x68k/aiq/` | `AIQ.X`（`tools-x68k/aiq/aiq.x`、ZIP内では大文字名）と `README.TXT` | 自然言語の指示からHuman68kのコマンド列を作る。ホスト側の `aiq-bridge`（Python）は同梱しない |
 | `tools-x68k/fntadr/` | `FNTADR.X`（`tools-x68k/fntadr/fntadr.x`、ZIP内では大文字名）と `README.TXT` | HIOCS等でANKフォントが差し替わったとき、実アドレスをエミュレータへ報告して文字認識を合わせるため |
-| `tools-host/cgrom_gen/` | `cgrom_gen.py` をPyInstaller（`--onefile`、Pillow同梱）で固めた `ix68k-cgrom-gen`（Windowsは `.exe`）と `README.md`。ビルドはPython 3が必要なstage側のみ | 手動導入で互換CGROMを生成するための補助ツール。利用者にPythonは要らない。インストーラは配布しない |
+| `tools-host/cgrom_gen/` | C製の `cgrom_gen`（Windowsは `cgrom_gen.exe`。macOS / LinuxはMakefile、WindowsはCMakeでビルドする）と `README.md` | ビットマップフォント（BDF）から互換CGROMを生成するための補助ツール。Pythonは要らない。インストーラは配布しない |
 | `tools-host/mcp/` | `tools-host/mcp/` の `ix68k_mcp_server.py`・`ix68k_wire.py`・`pyproject.toml`・`uv.lock`・`MCP_TOOLS.md`・`text_profiles/` と `README.md`（リポジトリの `tools-host/mcp/` をそのままコピーする） | ソースをビルドせず、`uv` だけでMCPサーバ機能をClaude Code等から使うため |
 | `.mcp.json` | リポジトリ直下の `.mcp.json` をコピーする。`uv run --project tools-host/mcp tools-host/mcp/ix68k_mcp_server.py` を `x68k-emulator` として登録する（展開先で `claude` を起動すれば読まれる） | MCPサーバの登録を手書きさせないため |
 | `gamecontrollerdb.txt` | SDLゲームコントローラのマッピングDB | コントローラ入力を認識するため |
