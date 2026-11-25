@@ -35,6 +35,23 @@ ix68kは、X68000ソフトウェアを動かすだけでなく、X68000向けソ
 ## 機能紹介動画
 https://www.youtube.com/watch?v=v4xdfjl1tr0
 
+## 動作条件
+
+ビルド済みバイナリ（Releasesのアーカイブ）の動作条件です。
+
+| OS | 条件 | 備考 |
+| --- | --- | --- |
+| macOS | **macOS 26 以降、Apple Silicon（arm64）のみ** | Intel Macと、macOS 15以前では起動しません。アーカイブの`ix68k.app`は未公証です（初回起動時の操作は、アーカイブ内の`README.md`を参照） |
+| Linux | **x86_64、glibc 2.34 以上**（Ubuntu 22.04以降、Debian 12以降などが目安） | SDL3は同梱します。画面はX11またはWayland。音を出すには`libpulse0`が要ります（無いと音なしで動きます） |
+| Windows | **Windows 10 以降（x64）** | SDL3とVCランタイム（`VCRUNTIME140.dll`）は同梱します。署名が無いので、SmartScreenの警告が出ることがあります |
+
+動作を確認した環境は、macOS 26（Apple Silicon）、Windows 11、Ubuntu 22.04（WSL2、映像・音声は
+dummyドライバのみ）です。上の条件を満たす別の環境や、Linuxの実際のX11・Waylandは、確認していません。
+ソースからビルドする場合は、[ビルド・実行手順](docs/ix68k-internals/build.md)を参照してください。
+
+IPLROM、CGROM、Human68kのディスクイメージは同梱していません。各自で用意します
+（[QUICKSTART](QUICKSTART.md)）。
+
 ## クイックスタート
 
 ビルド済みバイナリの入手、ROM・ディスクイメージの準備、設定、起動の手順は

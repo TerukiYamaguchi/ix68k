@@ -6,6 +6,17 @@ SHARP製パーソナルワークステーションX68000のエミュレータで
 
 - <https://github.com/TerukiYamaguchi/ix68k>
 
+## 動作条件
+
+| OS | 条件 |
+| --- | --- |
+| macOS | **macOS 26 以降、Apple Silicon（arm64）のみ**（Intel Macと、macOS 15以前では起動しません） |
+| Linux | **x86_64、glibc 2.34 以上**（Ubuntu 22.04以降、Debian 12以降などが目安）。画面はX11またはWayland。音を出すには`libpulse0`が要ります（無いと音なしで動きます） |
+| Windows | **Windows 10 以降（x64）**。署名が無いので、SmartScreenの警告が出ることがあります |
+
+動作を確認した環境は、macOS 26（Apple Silicon）、Windows 11、Ubuntu 22.04（WSL2、映像・音声は
+dummyドライバのみ）です。ほかの環境は確認していません。
+
 ## 同梱物
 
 | パス | 内容 |

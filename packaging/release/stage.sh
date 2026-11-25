@@ -328,6 +328,14 @@ verify_zip() {
         otool -L "$exe" | grep -q '@rpath/libSDL3' || die "SDL3が@rpath参照になっていない"
         codesign --verify --deep --strict "$pkg/ix68k.app" || die "署名の検証に失敗"
     fi
+    # ビルドしたユーザーのホームディレクトリ（ユーザー名を含む）が、配布物に入っていないこと。
+    # vcpkg を $HOME の下に置いてSDL3をビルドすると、SDL3に __FILE__ 由来のビルドパスが入る。
+    # ZIPを作るマシンでは、vcpkg を $HOME の外（例: /var/tmp/vcpkg）に置く。
+    if [[ ${#HOME} -ge 6 ]] && grep -rlaF -- "$HOME" "$pkg" > "$OUT_DIR/home_leak.txt" 2>/dev/null && [[ -s "$OUT_DIR/home_leak.txt" ]]; then
+        cat "$OUT_DIR/home_leak.txt" >&2
+        die "ZIPのファイルにビルドしたユーザーのホームディレクトリ（$HOME）が入っている"
+    fi
+    rm -f "$OUT_DIR/home_leak.txt"
     local main_exe="$pkg/ix68k"
     is_linux || main_exe="$pkg/ix68k.app/Contents/MacOS/ix68k"
     if strings -a "$main_exe" | grep -qF "$ROOT"; then

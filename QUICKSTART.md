@@ -24,6 +24,8 @@ ix68kを初めて起動するまでの手順です。ix68kの概要は [README.m
 アーカイブをダウンロードして展開します。ソースビルドは不要です。アーカイブには、エミュレータ本体
 （SDL3同梱）、`ix68k.cfg.example`、空の`rom/`・`disk/`、HOSTDRV関連ファイル、利用ガイドが
 入っています。同梱物の一覧は展開後の`README.md`を参照してください。
+動作条件は、macOS 26以降（Apple Silicon）、Linux（x86_64、glibc 2.34以上）、Windows 10以降（x64）です。
+詳しくは[README](README.md#動作条件)を参照してください。
 
 > GitHub Releasesでのビルド済みバイナリ配布は現在作成中です。配布開始前にソースから
 > 利用する場合は、[ビルド・実行手順](docs/ix68k-internals/build.md)を参照してください。
