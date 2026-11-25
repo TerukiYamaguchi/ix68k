@@ -9,9 +9,7 @@ swift "<PDF_OCR_SCRIPT>" \
   "<PDF絶対パス>" <ページ番号> 2>&1
 ```
 
-PDF パス例:
-- `local/refs/InsideX68000.pdf`
-- `local/refs/Human68k_3.0_Users_Manual.pdf`
+PDF の例: Inside X68000、Human68k 3.0 ユーザーズマニュアル
 
 ## 2. OCR テキストの読み方
 

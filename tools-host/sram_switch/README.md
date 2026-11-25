@@ -11,7 +11,7 @@
 （`tools-host/mcp/MCP_TOOLS.md` 参照）。
 
 `sram.dat` はファイル先頭が物理 `$ED0000` に対応する 16KB の生ダンプ（ヘッダなし）。
-アドレスは `local/refs/XC20_ProgManual_appendix.md`（Human68k ProgManual 付録）に基づく。
+アドレスは『C Compiler PRO-68K ver2.0 プログラマーズマニュアル』(XC20) 付録に基づく。
 
 ## ビルド
 
@@ -144,5 +144,4 @@ L000c1e-L000da6）に基づく:
 
 ## 出典
 
-『C Compiler PRO-68K ver2.0 プログラマーズマニュアル』(XC20) 付録
-（`local/refs/XC20_ProgManual_appendix.md`）の SRAM アドレスマップ。
+『C Compiler PRO-68K ver2.0 プログラマーズマニュアル』(XC20) 付録の SRAM アドレスマップ。

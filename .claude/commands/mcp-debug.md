@@ -7,7 +7,7 @@
 症状から「どの手段で観測し、どこで止め、何を採取するか」を選ぶためのガイド。
 
 - 引数・戻り値などのAPI仕様は `tools-host/mcp/MCP_TOOLS.md` を正本とし、ここでは再掲しない。各節は「どの症状でこれを選ぶか／選ばないか」に限る。
-- MCPプロトコル・デバッガ内部設計は `tools-host/mcp/MCP_TOOLS.md` の「内部プロトコル」節（ローカル専用の設計書 `local/design/design_mcp_debugger.md` は git 管理外）を正本とする。
+- MCPプロトコル・デバッガ内部設計は `tools-host/mcp/MCP_TOOLS.md` の「内部プロトコル」節を正本とする。
 - ツール一覧表・ドライブレター・FD0強制起動・各リングの詳細は `docs/ix68k-internals/mcp_debug_reference.md`（`rg -n '^#'` で見出しを引き、必要な節だけ読む）。
 - 人間が画面で追う外部デバッガ `ix68k-debugger`（Tk GUI、Issue #186）は §6.5 にまとめる。操作は `tools-host/debugger/MANUAL.md` が正本。
 - 接続確認・多重起動・Windows差分は末尾「運用注記」にまとめる。

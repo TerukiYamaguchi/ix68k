@@ -47,7 +47,7 @@ tools-host/hu68disk/hu68disk extract "$XDF" "/$TEST_PROGRAM" "$HOSTDRV_DIR/$TEST
 make -C tools-x68k/aiq
 cp tools-x68k/aiq/AIQ.X "$HOSTDRV_DIR/AIQ.X"
 
-X68K_RS232_PTY=1 local/run_x68000.sh -hostdrv "$HOSTDRV_DIR" > "$EMU_LOG" 2>&1 &
+X68K_RS232_PTY=1 tools-host/dev/run_x68000.sh -hostdrv "$HOSTDRV_DIR" > "$EMU_LOG" 2>&1 &
 EMU_PID=$!
 
 PTY_PATH=""

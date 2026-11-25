@@ -34,7 +34,6 @@ git add extern/cmc68000
 - `/hw-impl`: FDC / MFP
 - `/mcp-debug`: ix68k の不具合調査。推測での修正や一時計装の前に「基本ワークフロー」と該当する症状別レシピを読む。
 - `/xeij-trace`: XEiJ との差分デバッグ
-- `/article`: 技術記事の規約
 
 ROM は毎回逆アセンブルを生成せず、事前生成済みの `/dis/*.S` を grep する。詳細は `/rom-grep`。
 

@@ -8,7 +8,7 @@
 |   - DOS コールは実命令ではなく「Line-F (行1111) 命令」= $FFxx のワードを
 |     直接埋め込むことで発生する（Human68k はこれを vector 11 でトラップして
 |     解釈する）。.word 0xff00 が DOS _EXIT。関数コード一覧は
-|     local/refs/doscall.txt 参照。
+|     Human68k のプログラマーズマニュアルを参照。
 |   - IOCS (TRAP #15) を使いたい場合は `trap #15` の前に d0 へファンクション
 |     番号を入れる（doscall.mac 相当のマクロはこの環境には無いので手書きする）。
 

@@ -3,7 +3,7 @@
  * 実機の SWITCH.X と同じ KEY=VALUE 形式でオフラインの sram.dat を読み書きする。
  * エミュレータ起動前提のオフラインツール（起動中に書き換えても終了時に上書き保存される）。
  *
- * アドレスは local/refs/XC20_ProgManual_appendix.md（Human68k ProgManual 付録）に基づく。
+ * アドレスは『C Compiler PRO-68K ver2.0 プログラマーズマニュアル』(XC20) 付録に基づく。
  *
  * X=（XCHG, $ED0059）/ HD_MAX=（$ED005A）/ ID=（SCSI_ID, $ED0070）/ R=（RS232C, $ED001A）は
  * SWITCH.X Ver2.20実機逆アセンブル（Issue #115、switchx/unbind/SWITCH1.S）に基づく:
