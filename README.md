@@ -33,7 +33,7 @@ ix68kは、X68000ソフトウェアを動かすだけでなく、X68000向けソ
 自動化、デバッグ機能の詳細は [FEATURES.md](FEATURES.md) を参照してください。
 
 ## 機能紹介動画
-https://www.youtube.com/watch?v=v4xdfjl1tr0
+https://youtu.be/YUOOshQ-2g0
 
 ## 動作条件
 
