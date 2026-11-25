@@ -1,0 +1,4 @@
+// Application icon embedded in ix68k.exe. ID 1 (the lowest numeric ID) is the
+// icon Explorer shows for the executable. CMake substitutes the absolute path.
+// Keep this file ASCII-only: rc.exe reads it in the system ANSI code page.
+1 ICON "@X68K_APP_ICON_PATH@"

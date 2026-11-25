@@ -1,0 +1,27 @@
+# Uncompressed OTOKO.X rebuilt with make clean / make in C:\WORK\OTOKO\SOURCE.
+# Function positions are read from the embedded Human68k X symbol table.
+[target]
+sha256 = "e2ee4dc70bfa459a0e926952bc9e644609b51bc8594713e7643d5ba4824cd3e3"
+# Program allocation range observed under Human68k with 4 MiB RAM.
+scan_start = 0x00160000
+scan_end = 0x001A0000
+
+[[probe]]
+symbol = "_TxfontPuts"
+action = "string"
+value = "s+4"
+size = 4096
+source = "title.otoko"
+name = "TxfontPuts"
+encoding = "shift-jis"
+signature = "48e71010266f000c"
+
+[[probe]]
+symbol = "_TxfontPutchar"
+action = "char"
+value = "s+4"
+size = 1
+source = "title.otoko"
+name = "TxfontPutchar"
+encoding = "raw"
+signature = "48e71800162f000f"

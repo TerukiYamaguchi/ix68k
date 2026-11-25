@@ -1,0 +1,24 @@
+# EditorConfig — エディタ横断の最低限の統一（多くのエディタがプラグイン無しで対応）
+# https://editorconfig.org/  詳細な C の整形は .clang-format 側が担当。
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{c,h}]
+indent_style = space
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+# Markdown は行末2スペースが「改行」の意味を持つので末尾空白を消さない
+[*.md]
+trim_trailing_whitespace = false

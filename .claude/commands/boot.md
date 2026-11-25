@@ -1,0 +1,1 @@
+../../docs/ix68k-internals/boot.md

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "x68k-emulator": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project", "tools-host/mcp",
+        "tools-host/mcp/ix68k_mcp_server.py"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# NetBSD/x68k 10.1 GENERIC kernel built from source (netbsd-10.1-full, build.sh -m x68k kernel=GENERIC).
+# target sha256 is of the unstripped ELF (sys/arch/x68k/compile/GENERIC/netbsd); pass it as binary_path.
+# The kernel is fixed-base (VirtAddr 0), so symbol addresses equal runtime PC. strip does not move them,
+# so the same probes apply to a stripped copy installed in the guest.
+[target]
+sha256 = "d32d2fb56097d64e24ee9e0ee219354d26a3e825fe12de0e4962af4732dec27b"
+
+[[probe]]
+pc = 0x00008b04
+action = "char"
+value = "s+4"
+size = 1
+source = "console.netbsd"
+name = "iteputchar"
+encoding = "raw"
+space = "supervisor"
+signature = "2f0e2c4f48e73838"
+
+[[probe]]
+pc = 0x0000aecc
+action = "char"
+value = "s+c"
+size = 1
+source = "console.netbsd"
+name = "itecnputc"
+encoding = "raw"
+space = "supervisor"
+signature = "4e56fff848e73038"

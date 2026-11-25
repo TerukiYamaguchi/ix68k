@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Windows/Ubuntu用: 余白を小さくした本体960pxの角丸 -->
+  <rect id="background" x="32" y="32" width="960" height="960" rx="216" fill="#1c2230"/>
+  <!-- Xロゴ: X68000ロゴのXを参考にした、平行四辺形+三角形2つの輪郭線 -->
+  <g id="x-logo" transform="translate(512 512) scale(0.82) translate(-520 -360)">
+    <!-- 筆記体の小文字i（手描きパス）。Xより背面 -->
+    <g id="i-script" transform="translate(120 260) scale(1.2) translate(-120 -260)" fill="#e5484d" stroke="#e5484d" stroke-linecap="round">
+      <!-- イタリックの小文字i: 傾いた太い棒、上の旗、右へ跳ねる足、丸い点 -->
+      <!-- 棒の下半分と足は1本の連続した線、旗を含む棒の上端は棒の辺に揃えた多角形で描き、継ぎ目の段差を作らない -->
+      <path fill="none" stroke-width="36" stroke-linejoin="round" d="M140 88L103 238C97 268 118 290 146 272C158 264 170 250 184 232"/>
+      <path stroke="none" d="M100 84L158 34L169.6 44L148.2 130L111 130L118.5 100Z"/>
+      <circle cx="160" cy="-28" r="25" stroke="none"/>
+    </g>
+    <path fill="#f2f4f8" stroke="#f2f4f8" stroke-width="16" stroke-linejoin="miter" fill-rule="evenodd" d="M180 105H580L875 615H470Z M245 135H550L805 578H495Z M625 105H990L760 340Z M685 135H905L772 272Z M50 615L280 385L415 615Z M135 583L268 450L355 583Z"/>
+  </g>
+</svg>

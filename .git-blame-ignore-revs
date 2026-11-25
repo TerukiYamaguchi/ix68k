@@ -1,0 +1,7 @@
+# git blame から除外するコミット（大規模な機械整形など、内容を変えないもの）。
+# GitHub は自動でこのファイルを参照する。ローカル git で有効にするには一度だけ:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# 追記するときは「フル 40 桁のコミットハッシュ」を 1 行 1 個で書く。
+
+# style: apply clang-format to src/ and tools/hu68disk/ (formatting only)
+4aa5418eed264c99de285b26b77b39649c3edd4a

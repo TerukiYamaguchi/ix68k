@@ -1,0 +1,55 @@
+# Linuxネイティブビルド確認CI（Issue #110）。
+# build-null: SDL3非依存のヘッドレスビルド（PLATFORM_NULL=1）で最速に健全性確認。
+# build-sdl3: SDL3を実際に導入してビルド、配布物に近い構成を検証。
+
+name: build-check
+
+# 自動実行は止めている（push・PR では動かさない）。必要なときだけ Actions 画面か
+# `gh workflow run build-check` で手動実行する。
+on:
+  workflow_dispatch:
+
+jobs:
+  build-null:
+    runs-on: ubuntu-24.04 # ubuntu-latest(26.04)は apt の名前解決で止まることがあるため固定
+    steps:
+      # extern/cmc68000等のgit submoduleが必要なため recursive で取得する
+      # （format.ymlは整形対象外なので submodule 無しで取得しているが、こちらは
+      # ビルドに必須のため異なる）。
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Configure (headless)
+        run: cmake -S . -B build -DPLATFORM_NULL=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  build-sdl3:
+    runs-on: ubuntu-24.04 # ubuntu-latest(26.04)は apt の名前解決で止まることがあるため固定
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      # setup-sdl@main と 3-latest は実行のたびに中身が変わり、Install で止まった実績がある
+      # ため、アクションのタグと SDL のリリースを固定し、停止時はジョブを早く打ち切る。
+      - name: Install SDL3
+        uses: libsdl-org/setup-sdl@v1.0.1
+        timeout-minutes: 10
+        with:
+          version: 3.4.18
+          install-linux-dependencies: true
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

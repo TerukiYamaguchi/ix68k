@@ -1,0 +1,4 @@
+=== call trace (last 2 events, oldest first) ===
+ CALL 00FF00 -> 00FF20
+ RET  00FF24 -> 00FF04
+=== end call trace ===

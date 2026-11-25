@@ -1,0 +1,9 @@
+[project]
+name = "tools"
+version = "1.0.0"
+description = "Development and MCP utilities for the X68000 emulator"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp[cli]>=1.28.0",
+    "pillow>=12.2.0",
+]

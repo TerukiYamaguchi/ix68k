@@ -1,0 +1,7 @@
+[submodule "extern/cmc68000"]
+	path = extern/cmc68000
+	url = https://github.com/TerukiYamaguchi/cmc68000.git
+	branch = main
+[submodule "extern/SDL_GameControllerDB"]
+	path = extern/SDL_GameControllerDB
+	url = https://github.com/mdqinc/SDL_GameControllerDB.git

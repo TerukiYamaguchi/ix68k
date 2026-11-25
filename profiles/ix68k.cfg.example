@@ -1,0 +1,71 @@
+# ix68k の設定ファイル（サンプル兼、初回起動時の自動作成内容）。
+# ix68k.cfg としてコピーして使う。行頭の # を外すとその項目が有効になる。
+# 書式: キー = 値（# 以降は行末コメント）。
+# 相対パスの基準: 実行ファイルの隣やカレントに置いた場合は、この設定ファイルのあるディレクトリ。
+# ユーザー領域に自動作成された場合は、データフォルダ（File > Open Data Folder で開ける。
+# Linux では設定ファイルと別の場所）。ROM は rom/、ディスクイメージは disk/ に置く。
+# パスに none を指定すると「未指定」として扱われる。
+
+# ---- ROM / SRAM（必須）----
+rom = rom/IPLROM.DAT
+cgrom = rom/CGROM.DAT
+sram = sram.dat
+
+# ---- 機種 / CPU ----
+# 機種シリーズ（バス wait の表）: x68000（既定。68000/10MHz）| xvi | x68030
+# series = x68000
+# X68030 専用の CPU アクセラレータ: none | 060turbo（68060/50MHz）| 040turbo（68040/25・33MHz）
+# accelerator = none
+# CPU クロック（MHz）。10 が標準の X68000 相当。
+cpu_clock = 10
+# CPU 種別: 68000 | 68010 | 68020 | 68ec030 | 68030 | 68040 | 68060
+# cpu_model = 68000
+# FPU: on | off | 68881 | 68881-secondary | 68882
+# fpu = off
+# バスタイミング模擬: on | off
+# bus_timing = on
+# ローカルメモリ（MB）: off | 16 | 32 | 64 | 128
+# local_memory = off
+
+# ---- フロッピーディスク（fd0〜fd3）----
+# fd0 = disk/HUMAN302.XDF
+# fd1 = disk/DATA.XDF
+# 外付けフロッピードライブを接続する
+external_fdd = false
+
+# ---- SCSI ハードディスク（scsi_disk0〜scsi_disk6）----
+# scsi_disk0 = disk/SYSTEM_HD.HDS
+# MO / CD-ROM は特殊値で割り当てる
+# scsi_disk1 = MODRV
+# scsi_disk2 = CD
+# 書き込みを元イメージに反映せず、別ファイルへ逃がすオーバーレイ（scsi_overlay0〜6）
+# scsi_overlay0 = disk/SYSTEM_HD.overlay
+
+# ---- 表示 ----
+# 画面の大きさ: 1 | 1.5 | 2 | fullscreen（既定 1）。起動オプション -window-scale でも指定できる。
+# window_scale = 1
+
+# ---- ホスト連携 ----
+# ホストのフォルダをゲストのドライブとして共有する（HOSTDRV）
+# hostdrv_dir = /path/to/shared
+
+# ---- 入力 / 音 ----
+# キーボード配列: jis | us
+keyboard_layout = jis
+# 音のリサンプル方式: nearest（最速）| linear（既定）| cubic（高品質）
+resample_mode = linear
+# ゲームパッドの SELECT / START を、上下 / 左右の同時押しとして X68000 に伝える（既定 true）。
+# 方向レバーを普通に倒しただけで SELECT / START が押されたことになる不良パッドでは false にする。
+# joystick_select_start = true
+# X68000 のジョイスティック#1/#2 に使うゲームパッドを、起動ログの
+# 「Gamepad#N connected: <名前>」の番号 N（1〜8）で指定する。
+# 0 または未指定なら、#1 は Gamepad#1、#2 は Gamepad#2 を使う。
+# 繋いだ順と番号が一致しない、1人用ゲームで使いたいパッドが #2 になる、といった場合に使う。
+# 設定例: Gamepad#2 を #1 に、Gamepad#1 を #2 にする（2台のパッドの入れ替え）。
+# joy1 = 2
+# joy2 = 1
+
+# ---- デバッグ ----
+# HIOCS.X / IOCS.X 常駐時のコンソール出力を、MCP が自動で採取する（既定 true）。
+# 起動オプション -text-auto-probe <true|false> でも指定できる（起動オプションが優先）。
+# text_auto_probe = true

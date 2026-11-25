@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=ix68k
+GenericName=X68000 Emulator
+Comment=Sharp X68000 emulator
+Exec=ix68k
+Icon=ix68k
+Terminal=false
+Categories=Game;Emulator;
+Keywords=X68000;X68k;Emulator;Sharp;
+StartupWMClass=ix68k

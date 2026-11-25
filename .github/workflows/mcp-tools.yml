@@ -1,0 +1,30 @@
+# MCPツール定義と設定・ドキュメントの整合チェック（Issue #103 C-2）。
+# push（main 宛て）と、すべての Pull Request で自動実行される。
+#
+# ツールの追加・改名に許可リストやドキュメントが追随しない不整合は、ビルドも
+# テストも失敗させない（毎回パーミッション確認が出る／ドキュメントに載らない、
+# という形で静かに劣化するだけ）ため、専用のチェックを置く。
+name: mcp-tools-check
+
+# --- いつ動くか（トリガ） ---
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# --- 何をするか（ジョブ） ---
+jobs:
+  mcp-tools:
+    runs-on: ubuntu-latest
+    steps:
+      # ① リポジトリを取り出す。突き合わせ対象は .py・.json・.md だけなので
+      #    extern/ サブモジュール（＝非公開リポジトリ、PATが要る）は取得しない。
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      # ② 標準ライブラリのみで動く。不整合があれば 0 以外で終了＝ジョブ失敗。
+      - name: Check MCP tool consistency
+        run: python3 tools-host/dev/check_mcp_tools.py

@@ -1,0 +1,15 @@
+# TEXT PROBE profile format.  実在するタイトル／カーネルのPC・ABIは、対象版の
+# 展開後バイナリと入口署名を検証してから専用profileへ記録する。
+[target]
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[probe]]
+# 固定PCなら pc、シンボル表を持つ非圧縮.Xなら symbol、無ければ file_offset を使う。
+pc = 0x001000
+action = "string" # string / char / cursor
+value = "a0"      # d0..d7 / a0..a7 / s+offset / s-offset
+size = 256         # string: maximum bytes, char: 1/2/4, cursor: 0
+source = "example"
+name = "putstr"
+encoding = "shift-jis"
+signature = "4e71" # 実行時PCの先頭バイト列（MEM PEEKで照合）

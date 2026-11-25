@@ -1,0 +1,3 @@
+# シェルスクリプトは WSL/Linux から Windows の作業ツリーを読むため常に LF にする
+*.sh text eol=lf
+*.cmd text eol=crlf

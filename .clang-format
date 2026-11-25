@@ -1,0 +1,34 @@
+# X68000 エミュレータ + tools 共通コーディングスタイル
+# K&R 系（『プログラミング言語C』の系譜）＋ X68000 風味。
+# 既存コードに合わせ、ブレースは attached・キャストはスペース無し（案B）。
+# clang-format は上位ディレクトリを遡ってこのファイルを探すので、直下に置けば
+# 配下すべて（src/ tools/）に効く。サブモジュール extern/ は整形対象外。
+Language: Cpp
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never                 # スペース（エディタのタブ幅差で崩れない）
+
+ColumnLimit: 96               # X68000 高解像度テキスト画面の桁数(768/8=96)に合わせる
+
+BreakBeforeBraces: Attach     # 関数も制御構文も { は行末（既存の書き方）
+PointerAlignment: Right       # uint8_t *p
+DerivePointerAlignment: false
+
+# 詰め込んだ1行を展開（可読性）
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+
+# 表組み的な整列（X68000 のスペックシート的な見やすさ）
+AlignConsecutiveMacros: AcrossComments
+AlignTrailingComments: true
+AlignEscapedNewlines: Left
+
+SpaceAfterCStyleCast: false    # (uint8_t)x （スペースなし）
+SortIncludes: false           # インクルード順は意味があるので触らない
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false

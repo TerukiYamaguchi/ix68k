@@ -1,0 +1,13 @@
+# Codex project settings for ix68k development.
+# These settings load only after this repository is trusted by Codex.
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true
+
+[mcp_servers.x68k-emulator]
+command = "uv"
+args = ["run", "--project", "tools-host/mcp", "tools-host/mcp/ix68k_mcp_server.py"]
+enabled = true
+default_tools_approval_mode = "approve"

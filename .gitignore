@@ -1,0 +1,128 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Human68k デバイスドライバのビルド成果物（driver/*/、m68k-xelf-gcc でいつでも再ビルド可能）
+*.SYS
+# 例外: 再ビルド環境（m68k-xelf）の無いWindows機・CIでも配布物に使えるよう、
+# 検証済みのHOSTDRV.SYSだけは管理する（hostdrv.c変更時は再ビルドして再コミットする）。
+!tools-x68k/hostdrv/HOSTDRV.SYS
+
+# Human68k コマンド実行ファイルのビルド成果物（tools-x68k/hostfile/ 等、いつでも再ビルド可能。
+# elf2x68k.py はiCloud同期ボリューム上で大文字指定でも小文字で書き出すため両方除外）
+*.X
+*.x
+# 例外: tools-x68k/ 配下のHuman68kツール（HOSTFILE.X等）も、再ビルド環境なしで使えるよう管理する。
+!tools-x68k/*/*.x
+!tools-x68k/*/*.X
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+# ix68k-debuggerのWindows用起動スクリプトは生成物ではない
+!tools-host/debugger/launch_debugger.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# CMake（リポジトリ直下の build / build-xxx / build_sdl 等。実体は /tmp への
+# シンボリックリンクのこともあるため build/ ではなく build* で除外する）
+/build*
+.cache/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+compile_commands.json
+
+# macOS
+.DS_Store
+
+# Debug artifacts
+screenshot.ppm
+*.ppm
+tvram_*.png
+sram.dat.*_backup
+*.bak
+
+# SRAM 永続化ファイル: ROM デフォルトから再生成可能なので git 管理しない
+/sram.dat
+/sram30.dat
+/sram40.dat
+/sram060.dat
+
+# Downloaded reference manuals (local only — large / re-OCR output)
+docs/x68k_software/**/*.pdf
+docs/x68k_software/*.pdf
+docs/x68k_software/**/*_ocr*.txt
+docs/x68k_software/*_ocr*.txt
+
+# Copyrighted ROM / disk images (local only)
+rom/
+disk/
+
+# Downloaded software archives for HDS install/re-verification (local cache, re-fetchable)
+arc/
+
+# 開発者ごとの資料・設定。local/ 自体は独立したGitリポジトリとして管理してよいが、
+# この公開リポジトリには含めない。
+/local/
+
+# Third-party reference code (local only, not part of this project)
+# サブモジュール(extern/cmc68000, extern/SDL_GameControllerDB)は除外解除する
+extern/*
+!extern/cmc68000
+!extern/SDL_GameControllerDB
+
+# Python bytecode cache / 仮想環境
+__pycache__/
+*.py[cod]
+tools-host/mcp/.venv
+
+# HOSTDRV実機検証用のスクラッチディレクトリ（ix68k.cfgのhostdrv_dirが指す先。
+# テスト中のファイルを置くだけで内容に意味はない）
+tests/work/

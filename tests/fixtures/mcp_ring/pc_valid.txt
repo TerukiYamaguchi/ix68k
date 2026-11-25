@@ -1,0 +1,3 @@
+=== PC trace (last 2 instrs, oldest first) ===
+ 00FF00 00FF02
+=== end PC trace ===

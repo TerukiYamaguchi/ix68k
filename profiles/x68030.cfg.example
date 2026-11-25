@@ -1,0 +1,16 @@
+# X68030（MC68EC030 / 25MHz）用設定例。利用時は ix68k.cfg としてコピーする。
+rom = rom/IPLROM30.DAT
+cgrom = rom/CGROM.DAT
+sram = sram30.dat
+cpu_model = 68ec030
+cpu_clock = 25
+# X68030 の VRAM/MMIO 待機値を使う。
+series = x68030
+
+# scsi_disk0 = disk/SYSTEM_HD.HDS
+# scsi_disk1 = MODRV
+# scsi_disk2 = CD
+
+keyboard_layout = jis
+resample_mode = linear
+fpu = on

@@ -1,0 +1,26 @@
+# NetBSD/x68k 10.1 live image kernel (teokurebsd.org liveimage-x68k-with-packages-20250106).
+# /netbsd is unstripped a.out; symbol addresses equal runtime PC (fixed-base kernel, no relocation).
+[target]
+sha256 = "a431f4be07a6cbd15c374e41011656b9aef94b41849ea27d340608f06e5801fe"
+
+[[probe]]
+pc = 0x00008b04
+action = "char"
+value = "s+4"
+size = 1
+source = "console.netbsd"
+name = "iteputchar"
+encoding = "raw"
+space = "supervisor"
+signature = "2f0e2c4f48e73838"
+
+[[probe]]
+pc = 0x0000aecc
+action = "char"
+value = "s+c"
+size = 1
+source = "console.netbsd"
+name = "itecnputc"
+encoding = "raw"
+space = "supervisor"
+signature = "4e56fff848e73038"

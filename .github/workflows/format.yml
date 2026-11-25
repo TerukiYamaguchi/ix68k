@@ -1,0 +1,35 @@
+# clang-format チェック — 未整形のコードが main に入らないようにする CI。
+# push（main 宛て）と、すべての Pull Request で自動実行される。
+# 詳しい仕組みは各ステップのコメント参照。
+name: format-check
+
+# --- いつ動くか（トリガ） ---
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# --- 何をするか（ジョブ） ---
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest        # GitHub 提供の Linux 実行環境（毎回まっさら）
+    steps:
+      # ① リポジトリを実行環境に取り出す（extern/ サブモジュールは取得しない＝整形対象外）
+      - uses: actions/checkout@v5
+
+      # ② Python を用意（次の pip のため）
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      # ③ clang-format を「ローカルと同じ 22.1.5」に固定して入れる（バージョン差で
+      #    整形結果がブレるのを防ぐ最重要ポイント）
+      - name: Install clang-format (pinned)
+        run: pip install "clang-format==22.1.5"
+
+      # ④ --dry-run --Werror: ファイルを書き換えず、整形が必要なら 0 以外で終了＝ジョブ失敗。
+      #    どのファイルが未整形かは警告として出力される。
+      - name: Check formatting
+        run: |
+          find src tools-host/hu68disk -type f \( -name '*.c' -o -name '*.h' \) -print0 \
+            | xargs -0 -r clang-format --dry-run --Werror

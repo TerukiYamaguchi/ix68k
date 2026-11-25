@@ -1,0 +1,17 @@
+# 使用するホストキーボードに合うprofileを1つ選ぶ。
+# macbook_us / macbook_jp / mac_us_keypad / mac_jp_keypad
+# pc_us / pc_jp / pc_us_keypad / pc_jp_keypad
+profile = macbook_jp
+
+# profileの既定値を個別に上書きする場合だけ記述する。
+# layout = jis
+# disk_window_hotkey = f12
+# software_keyboard_hotkey = shift+f12
+# xf1_hotkey = gui+f1
+# xf2_hotkey = gui+f2
+# xf3_hotkey = gui+f3
+# xf4_hotkey = gui+f4
+# xf5_hotkey = gui+f5
+# kigou = ctrl+f6
+# touroku = ctrl+f7
+# break = ctrl+f8

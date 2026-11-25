@@ -1,0 +1,21 @@
+# HIOCS.X version 1.10+16 (Copyright 1990-93 SHARP / Y.Nakamura).
+# HIOCS は DOS コール（_PUTCHAR/_INPOUT/_PRINT など）を差し替え、コンソール出力を IOCS（TRAP #15）を
+# 経由せず _B_PUTC 本体へ直接つなぐ。このため read_stdout_text では HIOCS 組み込み時のコマンド出力が
+# 取れない。_B_PUTC 本体の入口（file_offset 0x420）はどの経路でも通るので、そこで D1.W（文字コード）を採る。
+# ロードベースは入口署名で実行時に求める（HIOCS は Human.sys 領域へ常駐する）。
+[target]
+sha256 = "be2d67a3fb6635c76e8d28bf2102741da2caac2fc8cf3f6bbfd12835418d8544"
+# Human.sys 領域（0x6800 から）。HIOCS の _B_PUTC 本体は 0x5A14A で確認した。
+scan_start = 0x00050000
+scan_end = 0x00070000
+
+[[probe]]
+file_offset = 0x420
+action = "char"
+value = "d1"
+size = 1
+source = "hiocs"
+name = "B_PUTC_body"
+encoding = "shift-jis"
+signature = "1038099066260cb8"
+space = "supervisor"

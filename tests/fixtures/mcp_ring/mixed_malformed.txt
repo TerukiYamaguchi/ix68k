@@ -1,0 +1,6 @@
+=== unknown trace ===
+00FF0Z
+pc=00FF00 op=4E71
+pc=00FF0G truncated
+CALL 00FF20 -> 00FF30
+=== end unknown trace ===
