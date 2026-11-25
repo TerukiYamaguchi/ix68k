@@ -256,6 +256,12 @@ verify_linux_binary() {
     ldd_out="$(LD_LIBRARY_PATH= ldd "$pkg/ix68k")"
     echo "$ldd_out" | grep -q 'not found' && { echo "$ldd_out"; die "未解決の共有ライブラリがある"; }
     echo "$ldd_out" | grep 'libSDL3' | grep -q "$pkg/lib/" || die "SDL3が同梱のlib/から解決されていない"
+    # SDL3に音声出力のバックエンド（PulseAudio。実行時に libpulse.so.0 を動的に読み込む）が入っていること。
+    # vcpkg標準のsdl3ポートは PulseAudio を無効にしてビルドし、音が出ないZIPになる（Issue #274）。
+    # packaging/release/vcpkg-overlay を --overlay-ports に指定して SDL3 をビルドし直す。
+    # （pipefail下で grep -q を使うと、grep の早期終了で strings が SIGPIPE になり失敗扱いになるため、件数を数える）
+    [[ "$(strings -a "$pkg/lib/libSDL3.so.0" | grep -c 'libpulse\.so\.0')" -gt 0 ]] \
+        || die "SDL3に PulseAudio が入っていない（音が出ない）。packaging/release/vcpkg-overlay で SDL3 を作り直す"
     # ROM無しで起動し、ライブラリ解決後にROM不在で正常終了（非0）することだけ確認する
     local out
     out="$(cd "$pkg" && HOME="$OUT_DIR/verify-home" SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy \

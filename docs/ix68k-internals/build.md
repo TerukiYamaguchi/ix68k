@@ -77,11 +77,11 @@ CIでもUbuntu上のGUI版とヘッドレス版をビルド・テストしてい
 sudo apt update
 sudo apt install -y build-essential cmake git pkg-config \
     autoconf autoconf-archive automake libtool zip unzip python3-venv \
-    libx11-dev libxft-dev libxext-dev libgl1-mesa-dev
+    libx11-dev libxft-dev libxext-dev libgl1-mesa-dev libpulse-dev
 
 git clone https://github.com/microsoft/vcpkg.git
 ./vcpkg/bootstrap-vcpkg.sh
-./vcpkg/vcpkg install sdl3:x64-linux-dynamic
+./vcpkg/vcpkg install --overlay-ports="$PWD/packaging/release/vcpkg-overlay" sdl3:x64-linux-dynamic
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_TOOLCHAIN_FILE="$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake" \
@@ -92,12 +92,20 @@ ctest --test-dir build --output-on-failure
 ./build/ix68k -rom rom/IPLROM.DAT -cgrom rom/CGROM.DAT
 ```
 
+**SDL3は、`packaging/release/vcpkg-overlay`のoverlay portで入れます。** vcpkg標準の`sdl3`ポートは
+PulseAudioを無効にしてビルドするため、標準のポートで作ったSDL3では、Linux版が`SDL_InitSubSystem(AUDIO)
+failed: No available audio device`と出して音が出ません（Issue #274）。overlay portはLinuxだけPulseAudioを
+有効にします（実行時に`libpulse.so.0`を動的に読み込むので、利用者に要るのは`libpulse0`だけです）。
+ビルドする機械には`libpulse-dev`が要ります。sudoが使えない機械での手順は、
+[`packaging/release/vcpkg-overlay/README.md`](../../packaging/release/vcpkg-overlay/README.md)にあります。
+`stage.sh`は、ZIPの`lib/libSDL3.so.0`に`libpulse.so.0`の文字列が無いと、検証で止まります。
+
 vcpkgを別の場所へ置く場合は、`CMAKE_TOOLCHAIN_FILE` にその絶対パスを指定します。
 Release ZIPは`CMAKE_TOOLCHAIN_FILE=<vcpkg.cmake> packaging/release/stage.sh`で作ります（トリプレットは
 既定で`x64-linux-dynamic`。`X68K_VCPKG_TRIPLET`で変更できます）。
 **配布するZIPを作るときは、vcpkgを`$HOME`の外（例: `/var/tmp/vcpkg`）に置き、
 `VCPKG_BINARY_SOURCES=clear`を付けてSDL3をソースからビルドします**
-（`VCPKG_BINARY_SOURCES=clear /var/tmp/vcpkg/vcpkg install sdl3:x64-linux-dynamic`。
+（`VCPKG_BINARY_SOURCES=clear /var/tmp/vcpkg/vcpkg install --overlay-ports=<リポジトリ>/packaging/release/vcpkg-overlay sdl3:x64-linux-dynamic`。
 `stage.sh`の実行時にも同じ環境変数を付けます）。vcpkgがSDL3をビルドするとき、`__FILE__`由来の
 ビルドパス（`/home/<ユーザー名>/vcpkg/buildtrees/...`）が`libSDL3.so`に埋め込まれ、ユーザー名が
 配布物に入るためです。vcpkgの置き場所を変えただけでは、`$HOME`の下のバイナリキャッシュ
