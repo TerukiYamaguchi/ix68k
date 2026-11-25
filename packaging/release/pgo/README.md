@@ -4,6 +4,9 @@
 通常ビルド（CMake、Clang の Release 系）も、このファイルがあれば適用する。
 採取手順は `tools-host/pgo/README.md`、設計は `docs/ix68k-internals/design/pgo_design.md`。
 
+下の表のコミットは、公開前の旧リポジトリ（x68000・mc68000）のものです。新しいリポジトリは履歴を引き継いでいないため、
+このハッシュは辿れません。採取した時点の目印として残しています。
+
 ## ix68k-macos-arm64.profdata
 
 | 項目 | 値 |

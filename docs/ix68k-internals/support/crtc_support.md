@@ -130,7 +130,7 @@ GVRAM ページ表示（`x68k_bus_get_gvram_pages` によるページ別ベー�
 保持型（レベル）動作へ変更。根拠はXEiJ `CRTC.java`（`crtRasterCopyOn`/`crtDoRasterCopy`、
 L217-235コメントが「bit3は0を書くまで1のまま保持されるMPU側スイッチであり、トリガーでも
 完了フラグでもない」と明記）、MPX68K commit `f59c07d`、
-およびMPX68K `tools/raster-copy-test/`のセルフブート目視テストを移植・ビルドし
+およびMPX68K `tools/raster-copy-test/`のセルフブート目視テストを手元でビルドして
 自エミュレータ上で修正前後の挙動差（修正前: COPY ON中でもコピー先が追従せず書き込み時の
 1回だけで固まる／修正後: ON中は追従しOFFで凍結）を実機検証して確認。実装は
 `x68k_bus_crtc_raster_copy()`（`src/peripheral/crtc.c`、書き込み時トリガとフロントポーチ
