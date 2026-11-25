@@ -264,6 +264,33 @@ verify_linux_binary() {
     return 0
 }
 
+# ZIPを作ったユーザーの個人パス（ユーザー名を含む）が、配布物のファイルに入っていないこと。
+# vcpkg を $HOME の下に置いてSDL3をビルドすると、SDL3に __FILE__ 由来のビルドパス
+# （/home/<ユーザー名>/vcpkg/buildtrees/...）が入る。ZIPを作るマシンでは、vcpkg を $HOME の外
+# （例: /var/tmp/vcpkg）に置き、vcpkg のバイナリキャッシュ（$HOME の下）から旧いSDL3が復元
+# されないよう VCPKG_BINARY_SOURCES=clear を付ける。
+# $HOME が実際のホームと違う環境（WSL で HOME=/mnt/c/Users/<名前> など）でも検出できるよう、
+# $HOME のほかに /home/<ユーザー名>/ と /Users/<ユーザー名>/ も探す。
+verify_no_user_path() {
+    local pkg="$1" user needle
+    local needles=()
+    user="$(id -un 2>/dev/null || true)"
+    if [[ ${#HOME} -ge 6 ]]; then
+        needles+=("$HOME")
+    fi
+    if [[ ${#user} -ge 3 ]]; then
+        needles+=("/home/$user/" "/Users/$user/")
+    fi
+    local leak_list="$OUT_DIR/user_path_leak.txt"
+    for needle in ${needles[@]+"${needles[@]}"}; do
+        if grep -rlaF -- "$needle" "$pkg" > "$leak_list" 2>/dev/null && [[ -s "$leak_list" ]]; then
+            cat "$leak_list" >&2
+            die "ZIPのファイルにビルドしたユーザーの個人パス（${needle}）が入っている"
+        fi
+    done
+    rm -f "$leak_list"
+}
+
 verify_zip() {
     local zip_path="$1" name="$2"
     local check_dir="$OUT_DIR/verify"
@@ -328,18 +355,11 @@ verify_zip() {
         otool -L "$exe" | grep -q '@rpath/libSDL3' || die "SDL3が@rpath参照になっていない"
         codesign --verify --deep --strict "$pkg/ix68k.app" || die "署名の検証に失敗"
     fi
-    # ビルドしたユーザーのホームディレクトリ（ユーザー名を含む）が、配布物に入っていないこと。
-    # vcpkg を $HOME の下に置いてSDL3をビルドすると、SDL3に __FILE__ 由来のビルドパスが入る。
-    # ZIPを作るマシンでは、vcpkg を $HOME の外（例: /var/tmp/vcpkg）に置く。
-    if [[ ${#HOME} -ge 6 ]] && grep -rlaF -- "$HOME" "$pkg" > "$OUT_DIR/home_leak.txt" 2>/dev/null && [[ -s "$OUT_DIR/home_leak.txt" ]]; then
-        cat "$OUT_DIR/home_leak.txt" >&2
-        die "ZIPのファイルにビルドしたユーザーのホームディレクトリ（$HOME）が入っている"
-    fi
-    rm -f "$OUT_DIR/home_leak.txt"
+    verify_no_user_path "$pkg"
     local main_exe="$pkg/ix68k"
     is_linux || main_exe="$pkg/ix68k.app/Contents/MacOS/ix68k"
     if strings -a "$main_exe" | grep -qF "$ROOT"; then
-        die "ix68kにビルド環境のパス（$ROOT）が埋め込まれている"
+        die "ix68kにビルド環境のパス（${ROOT}）が埋め込まれている"
     fi
     python3 "$pkg/$TOOLS_HOST_DIR/ix68k-hostfile/ix68k-hostfile" --help > /dev/null || die "ix68k-hostfile --help が失敗"
     "$pkg/$TOOLS_HOST_DIR/cgrom_gen/cgrom_gen" --version > /dev/null || die "cgrom_gen --version が失敗"

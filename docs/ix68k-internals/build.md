@@ -95,10 +95,15 @@ ctest --test-dir build --output-on-failure
 vcpkgを別の場所へ置く場合は、`CMAKE_TOOLCHAIN_FILE` にその絶対パスを指定します。
 Release ZIPは`CMAKE_TOOLCHAIN_FILE=<vcpkg.cmake> packaging/release/stage.sh`で作ります（トリプレットは
 既定で`x64-linux-dynamic`。`X68K_VCPKG_TRIPLET`で変更できます）。
-**配布するZIPを作るときは、vcpkgを`$HOME`の外（例: `/var/tmp/vcpkg`）に置きます。** vcpkgが
-SDL3をビルドするとき、`__FILE__`由来のビルドパス（`/home/<ユーザー名>/vcpkg/buildtrees/...`）が
-`libSDL3.so`に埋め込まれ、ユーザー名が配布物に入るためです。`stage.sh`は、ZIPの中に`$HOME`を含む
-ファイルがあると検証で止まります。
+**配布するZIPを作るときは、vcpkgを`$HOME`の外（例: `/var/tmp/vcpkg`）に置き、
+`VCPKG_BINARY_SOURCES=clear`を付けてSDL3をソースからビルドします**
+（`VCPKG_BINARY_SOURCES=clear /var/tmp/vcpkg/vcpkg install sdl3:x64-linux-dynamic`。
+`stage.sh`の実行時にも同じ環境変数を付けます）。vcpkgがSDL3をビルドするとき、`__FILE__`由来の
+ビルドパス（`/home/<ユーザー名>/vcpkg/buildtrees/...`）が`libSDL3.so`に埋め込まれ、ユーザー名が
+配布物に入るためです。vcpkgの置き場所を変えただけでは、`$HOME`の下のバイナリキャッシュ
+（`~/.cache/vcpkg/archives`）から、パスの入った旧いSDL3が復元されることがあります。
+`stage.sh`は、ZIPの中に`$HOME`・`/home/<ユーザー名>/`・`/Users/<ユーザー名>/`を含むファイルが
+あると、検証で止まります（`stage.ps1`は`%USERPROFILE%`などを検査します）。
 Wayland環境でもSDL3のバックエンドが選ばれるが、問題の切り分けにはX11セッションでの起動を試します。
 WSLg（既定のWaylandバックエンド）では、描画とMCP tickが同一メインループにあるため
 レンダリングが数十秒単位で滞ると外部からのMCP要求もtimeoutします。`SDL_VIDEODRIVER=x11`

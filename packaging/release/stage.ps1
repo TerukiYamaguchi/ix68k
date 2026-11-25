@@ -258,6 +258,29 @@ function Make-Zip {
     } finally { $zip.Dispose() }
 }
 
+# ZIPを作ったユーザーの個人パス（ユーザー名を含む）が、配布物のファイルに入っていないこと。
+# vcpkg を %USERPROFILE% の下に置いてSDL3をビルドすると、SDL3にビルドパスが入ることがある。
+# ZIPを作るマシンでは、vcpkg を %USERPROFILE% の外（例: C:\vcpkg）に置く。
+function Test-NoUserPath {
+    param([string]$Pkg)
+    $needles = @()
+    if ($env:USERPROFILE -and $env:USERPROFILE.Length -ge 6) { $needles += $env:USERPROFILE }
+    if ($env:USERNAME -and $env:USERNAME.Length -ge 3) {
+        $needles += "\Users\$($env:USERNAME)\"
+        $needles += "/Users/$($env:USERNAME)/"
+        $needles += "/home/$($env:USERNAME)/"
+    }
+    $latin1 = [System.Text.Encoding]::GetEncoding(28591)
+    foreach ($f in Get-ChildItem -Path $Pkg -Recurse -File) {
+        $text = $latin1.GetString([System.IO.File]::ReadAllBytes($f.FullName))
+        foreach ($n in $needles) {
+            if ($text.IndexOf($n, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+                Die "ZIPのファイルにビルドしたユーザーの個人パス（$n）が入っている: $($f.FullName)"
+            }
+        }
+    }
+}
+
 function Verify-Zip {
     $checkDir = Join-Path $OutDir "verify"
     if (Test-Path $checkDir) { Remove-Item $checkDir -Recurse -Force }
@@ -321,6 +344,7 @@ function Verify-Zip {
     $srExe = Join-Path $pkg "$ToolsHostDir\sram_switch\sram_switch.exe"
     Invoke-Native $srExe @("-f", $sr, "B=2HD0") | Out-Null
     if (-not ((Invoke-Native $srExe @("-f", $sr)) -match "2HD0")) { Die "sram_switch の設定が読み戻せない" }
+    Test-NoUserPath $pkg
     Log "検証OK: $ZipPath"
 }
 
