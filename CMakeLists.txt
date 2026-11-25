@@ -403,8 +403,10 @@ if(WIN32)
     # ツールチェーン依存（mingw-w64は古い系列だと0x0502）なので明示する。
     target_compile_definitions(ix68k PRIVATE _WIN32_WINNT=0x0A00 WINVER=0x0A00)
 endif()
-if(APPLE AND NOT PLATFORM_NULL)
-    # 開発ビルド（.app外）でDockアイコンを設定するための icns パス
+# 開発ビルド（.app外）でDockアイコンを設定するための icns パスを埋め込む。ビルド環境の
+# 絶対パスがバイナリに入るため、配布ビルド（packaging/release/stage.sh）はOFFにする。
+option(X68K_DEV_DOCK_ICON "開発ビルドでDockアイコンのicnsパスを埋め込む（macOS）" ON)
+if(APPLE AND NOT PLATFORM_NULL AND X68K_DEV_DOCK_ICON)
     target_compile_definitions(ix68k PRIVATE
         X68K_DEV_ICON_PATH="${CMAKE_SOURCE_DIR}/packaging/icons/macos/AppIcon.icns")
 endif()

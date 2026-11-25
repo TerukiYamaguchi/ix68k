@@ -132,7 +132,7 @@ build_and_install() {
     else
         log "PGO プロファイル無し（通常ビルド）"
     fi
-    cmake -S "$ROOT" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release \
+    cmake -S "$ROOT" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release -DX68K_DEV_DOCK_ICON=OFF \
         -DX68K_APP_VERSION="$VERSION" -DX68K_RELEASE_VERSION="$VERSION" ${extra[@]+"${extra[@]}"} > /dev/null
     # 配布する ix68k だけを先にビルドして不一致を数える（テスト用ターゲットは
     # 別の定義でコンパイルされるため、全体ビルドの警告数は指標にならない）
@@ -345,6 +345,11 @@ verify_zip() {
         fi
         otool -L "$exe" | grep -q '@rpath/libSDL3' || die "SDL3が@rpath参照になっていない"
         codesign --verify --deep --strict "$pkg/ix68k.app" || die "署名の検証に失敗"
+    fi
+    local main_exe="$pkg/ix68k"
+    is_linux || main_exe="$pkg/ix68k.app/Contents/MacOS/ix68k"
+    if strings -a "$main_exe" | grep -qF "$ROOT"; then
+        die "ix68kにビルド環境のパス（$ROOT）が埋め込まれている"
     fi
     "$pkg/$TOOLS_HOST_DIR/ix68k-hostfile/ix68k-hostfile" --help > /dev/null || die "ix68k-hostfile --help が失敗"
     # hu68disk: 空イメージ作成→ファイル追加→取り出しの往復で動作を確認する
