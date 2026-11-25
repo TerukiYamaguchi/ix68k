@@ -161,7 +161,7 @@ tools-host/hu68disk/hu68disk copyall <辞書ディスクイメージ> / disk/<Q3
 ルートに置いても動作上は問題ない）。
 
 ```sh
-curl --insecure -L -o /tmp/SXWIN315.LZH "http://retropc.net/x68000/software/sharp/sxwindow/SXWIN315.LZH"
+curl -L -o /tmp/SXWIN315.LZH "http://retropc.net/x68000/software/sharp/sxwindow/SXWIN315.LZH"
 mkdir -p /tmp/sxwin315_extracted && cd /tmp/sxwin315_extracted && unar -f -D /tmp/SXWIN315.LZH
 tools-host/hu68disk/hu68disk copy disk/<Q3のファイル名> /tmp/sxwin315_extracted/X68K.DIC /ASK
 ```
@@ -257,7 +257,7 @@ MO・CD-ROMのどちらも、Human68k標準のSCSIドライバではなく汎用
 
 ```sh
 # 1. ダウンロード（arc/に既にあればスキップ。配布元サーバへの再アクセスを避ける）
-curl --insecure -L --create-dirs \
+curl -L --create-dirs \
   -o "arc/retropc.net/x68000/software/disk/scsi/susie/sse_121a.lzh" \
   "http://retropc.net/x68000/software/disk/scsi/susie/sse_121a.lzh"
 

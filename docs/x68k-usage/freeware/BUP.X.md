@@ -3,7 +3,7 @@ exe: BUP.X
 種別: freeware
 作者: 東出浩一さん
 版: v1.2 Rel.2（BdifSet.Lzh収録）
-出典: 配布元 https://retropc.net/x68000/software/tools/archiver/bdifset/ （X68000 LIBRARY）
+出典: 配布元 http://retropc.net/x68000/software/tools/archiver/bdifset/ （X68000 LIBRARY）
 判別: -（BdifSet.Lzh収録版のみ確認。BdifSetにはbdif.x/bfd2rx.x/revdel.xも同梱だが未インストール）
 検証状態: ✅ インストール・パッチ適用動作確認済み（[ZMUSIC.X](ZMUSIC.X.md) 2.08→2.08e適用で使用）
 最終更新: 2026-08-19
@@ -45,7 +45,7 @@ BUP <差分ファイル名>[.bfd] [オプション]
 
 ### 入手先
 
-https://retropc.net/x68000/software/tools/archiver/bdifset/ から`BdifSet.Lzh`をダウンロード可能
+http://retropc.net/x68000/software/tools/archiver/bdifset/ から`BdifSet.Lzh`をダウンロード可能
 （`bdif.x` `bup.x` `bfd2rx.x` `revdel.x`一式同梱）。
 
 **`arc/BdifSet.Lzh`にローカル保存済み**（2026-08-06取得）。再検証・再インストール時は
@@ -56,7 +56,7 @@ retropc.netへ再度アクセスせず、まずこちらを使うこと。
 ```sh
 # 1. ダウンロード（arc/BdifSet.Lzhにローカル保存済みならそれを使う）
 cp arc/BdifSet.Lzh ./BdifSet.Lzh
-# 無ければ: curl -LO https://retropc.net/x68000/software/tools/archiver/bdifset/BdifSet.Lzh
+# 無ければ: curl -LO http://retropc.net/x68000/software/tools/archiver/bdifset/BdifSet.Lzh
 
 # 2. 展開（unar、要 brew install unar）
 unar -o ./bdifset_extracted BdifSet.Lzh

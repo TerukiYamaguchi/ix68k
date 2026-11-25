@@ -66,7 +66,7 @@ http://retropc.net/x68000/software/sharp/sxwindow/ （X68000 LIBRARY）。ディ
 ```sh
 HDS=disk/SYSTEM_HD.HDS
 H=tools-host/hu68disk/hu68disk
-A=arc/retropc.net/x68000/software/sharp/sxwindow     # 無ければ配布元から curl --insecure -L --create-dirs -o で取得
+A=arc/retropc.net/x68000/software/sharp/sxwindow     # 無ければ配布元から curl -L --create-dirs -o で取得
 
 # 1. XDFを取り出す（bsdtar が "(null)" と出て終了コードが非0になるが、XDF は展開される）
 mkdir -p /tmp/sxwin && cd /tmp/sxwin

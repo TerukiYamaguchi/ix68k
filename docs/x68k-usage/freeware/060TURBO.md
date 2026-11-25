@@ -194,7 +194,7 @@ http://retropc.net/x68000/software/hardware/060turbo/ （X68000 LIBRARY）。各
 ### インストール（HDSへの導入手順）
 
 エミュレータ停止中に実行します。`060turbo.sys` は別途導入済みのため対象外。展開には `unar` が必要（`brew install unar`）。
-アーカイブは `arc/` のキャッシュを使い、無いときだけ配布元から `curl --insecure -L --create-dirs -o` で取得します。
+アーカイブは `arc/` のキャッシュを使い、無いときだけ配布元から `curl -L --create-dirs -o` で取得します。
 
 ```sh
 HDS=disk/SYSTEM_HD.HDS

@@ -84,7 +84,7 @@ http://retropc.net/x68000/software/disk/filename/twentyone/ から `tw136c14.lzh
 
 ```sh
 # 1. ダウンロード（arc/ に無い場合のみ）
-curl --insecure -L --create-dirs \
+curl -L --create-dirs \
   -o "arc/retropc.net/x68000/software/disk/filename/twentyone/tw136c14.lzh" \
   "http://retropc.net/x68000/software/disk/filename/twentyone/tw136c14.lzh"
 

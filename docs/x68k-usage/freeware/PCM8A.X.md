@@ -111,7 +111,7 @@ http://retropc.net/x68000/software/sound/adpcm/pcm8a/ から `pcm8a102.lzh`（93
 
 ```sh
 # 1. ダウンロード（arc/ に無い場合のみ。あるならこの手順は飛ばす）
-curl --insecure -L --create-dirs \
+curl -L --create-dirs \
   -o "arc/retropc.net/x68000/software/sound/adpcm/pcm8a/pcm8a102.lzh" \
   "http://retropc.net/x68000/software/sound/adpcm/pcm8a/pcm8a102.lzh"
 

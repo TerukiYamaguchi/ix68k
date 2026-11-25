@@ -3,7 +3,7 @@ exe: ZP.R
 種別: freeware
 作者: Z.Nishikawa さん（原作）/ MZL さん（現行メンテナ）※Z-MUSIC ver2支援ツールのサンプルとして同梱
 版: v2.08e（ZMSC208X.LZH収録のv2.08に`zm208e.lzh`差分パッチ適用済み、11208 bytes）
-出典: 配布元 https://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）
+出典: 配布元 http://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）
 判別: -（配布アーカイブ ZMSC208X.LZH + zm208e.lzh 適用版のみ確認）
 検証状態: 📖 マニュアル参照のみ（`\BIN`へインストール・2.08eパッチ適用済みだが起動未検証）
 最終更新: 2026-08-19

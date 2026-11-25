@@ -74,7 +74,7 @@ graphics/pic/apicg/apg_212a.lzh`にローカル保存済み**（2026-08-21取得
 
 ```sh
 # 1. ダウンロード（arc/にあればそれを使う）
-curl --insecure -L --create-dirs \
+curl -L --create-dirs \
   -o "arc/retropc.net/x68000/software/graphics/pic/apicg/apg_212a.lzh" \
   "http://retropc.net/x68000/software/graphics/pic/apicg/apg_212a.lzh"
 

@@ -3,7 +3,7 @@ exe: ZMUSIC.X
 種別: freeware
 作者: Z.Nishikawa さん（原作）/ MZL さん（現行メンテナ）
 版: v2.08e（ZMSC208X.LZH収録のv2.08に`zm208e.lzh`差分パッチ適用済み、56992 bytes）
-出典: 配布元 https://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）
+出典: 配布元 http://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）
 判別: -（配布アーカイブ ZMSC208X.LZH + zm208e.lzh 適用版のみ確認）
 検証状態: ✅ インストール・パッチ適用・起動確認済み（起動バナー "UNIVERSAL VERSION 2.08e"）。
   同梱ツール ZMSC.X/ZPCNV.R/ZP.R/ZVT.X も2.08eパッチまで適用しインストール済み（起動確認は未）
@@ -85,7 +85,7 @@ MMLコンパイル処理を省いたZMD再生専用版。常駐サイズはZMUSI
 
 ### 入手先
 
-https://retropc.net/x68000/software/sound/zmusic/zmusic2/ から以下3アーカイブをダウンロード可能です。
+http://retropc.net/x68000/software/sound/zmusic/zmusic2/ から以下3アーカイブをダウンロード可能です。
 
 - `ZMSC208X.LZH` … 実行ファイル（`ZMUSIC.X` `ZMSC.X` `ZPCNV.R` `MUSICZ.FNC` `ZP.R` `ZVT.X` `ZPLK.R` 等）
 - `ZMSC208S.LZH` … ソースコード（`ZMSC.HAS` 等、HAS/S形式）
@@ -105,7 +105,7 @@ https://retropc.net/x68000/software/sound/zmusic/zmusic2/ から以下3アーカ
 ```sh
 # 1. ダウンロード（arc/ZMSC208X.LZHにローカル保存済みならそれを使う）
 cp arc/ZMSC208X.LZH ./ZMSC208X.LZH
-# 無ければ: curl -LO https://retropc.net/x68000/software/sound/zmusic/zmusic2/ZMSC208X.LZH
+# 無ければ: curl -LO http://retropc.net/x68000/software/sound/zmusic/zmusic2/ZMSC208X.LZH
 
 # 2. 展開（unar、要 brew install unar）
 unar -o ./zmusic_x_extracted ZMSC208X.LZH

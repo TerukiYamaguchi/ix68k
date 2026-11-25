@@ -84,11 +84,11 @@ MicroEMACSは単一実行ファイルではなく、`%dir-path`配下に`el/`（
 # 1. ダウンロード（arc/retropc.net/...にローカル保存済みならそれを使う）
 BASE="arc/retropc.net/x68000/software/texteditor/microemacs"
 # 無ければ:
-# curl --insecure -L --create-dirs -o "$BASE/microemacs/em_r5b.lzh" \
+# curl -L --create-dirs -o "$BASE/microemacs/em_r5b.lzh" \
 #   "http://retropc.net/x68000/software/texteditor/microemacs/microemacs/em_r5b.lzh"
-# curl --insecure -L --create-dirs -o "$BASE/microemacs/em_man.lzh" \
+# curl -L --create-dirs -o "$BASE/microemacs/em_man.lzh" \
 #   "http://retropc.net/x68000/software/texteditor/microemacs/microemacs/em_man.lzh"
-# curl --insecure -L --create-dirs -o "$BASE/sharlemacs/emr5c6b.tgz" \
+# curl -L --create-dirs -o "$BASE/sharlemacs/emr5c6b.tgz" \
 #   "http://retropc.net/x68000/software/texteditor/microemacs/sharlemacs/emr5c6b.tgz"
 
 # 2. 展開（unar / tar。LZH形式にはunar、TGZにはtar）

@@ -215,8 +215,8 @@ DB [<スイッチ>] [<ファイル名>] [<コマンドライン>] ↵
 - retropc.net配布（Sharp/Hudson、著作権表示の通り再配布条件あり）:
   http://retropc.net/x68000/software/sharp/xc21/ から`XC2101.LZH`（538.0KB、
   XCシステムディスク1 (2000/04/15)）をダウンロード。`/BIN/DB.X`として収録されています。
-  ページはShift_JIS・httpのみ（httpsは`SSL routines:UNSUPPORTED_PROTOCOL`で失敗、
-  `curl --insecure`が必要）。
+  ページはShift_JIS・httpのみ（httpsは証明書の検証に失敗するため、
+  `http://`のURLで取得する）。
 - **`arc/XC2101.LZH`にローカル保存済み**（2026-08-14取得）。再検証時は再ダウンロードせず
   これを使うこと。
 
@@ -224,7 +224,7 @@ DB [<スイッチ>] [<ファイル名>] [<コマンドライン>] ↵
 
 ```sh
 # 1. ダウンロード（arc/XC2101.LZHにローカル保存済みならそれを使う）
-curl --insecure -L -O "http://retropc.net/x68000/software/sharp/xc21/XC2101.LZH"
+curl -L -O "http://retropc.net/x68000/software/sharp/xc21/XC2101.LZH"
 
 # 2. 展開（unar、要 brew install unar）
 unar -o ./XC2101_extracted XC2101.LZH

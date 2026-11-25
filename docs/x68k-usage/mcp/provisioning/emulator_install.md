@@ -36,7 +36,7 @@ Claude Code や LM Studio 等、**ホストのシェルコマンドを実行で�
 |------|---------|
 | このマシンでビルド済み（`build/ix68k`等） | 無ければ[ビルド・実行手順](../../../ix68k-internals/build.md)に従って先にビルドする |
 | `curl` / `unar`（LZH展開）/ `unzip` が使える | `unar -v` / `unzip -v` |
-| retropc.net への接続 | 証明書が古いため`curl --insecure`が必須（Step 4-1・4-3のコマンド参照）。ftp.iij.ad.jp等それ以外の接続先では不要 |
+| retropc.net への接続 | httpsは証明書の検証に失敗するため、URLは`http://retropc.net/...`を使う（Step 4-1・4-3のコマンド参照）。ftp.iij.ad.jp等それ以外の接続先でも`curl`は使わない |
 
 ---
 
@@ -142,7 +142,7 @@ Q3の回答に応じて「手持ちのファイルをコピー」または「`to
 ```sh
 mkdir -p arc/retropc.net/x68000/software/sharp/x68bios
 [ -f arc/retropc.net/x68000/software/sharp/x68bios/X68BIOSX.LZH ] || \
-  curl --insecure -L -o arc/retropc.net/x68000/software/sharp/x68bios/X68BIOSX.LZH \
+  curl -L -o arc/retropc.net/x68000/software/sharp/x68bios/X68BIOSX.LZH \
     "http://retropc.net/x68000/software/sharp/x68bios/X68BIOSX.LZH"
 
 mkdir -p /tmp/x68biosx_extract && cd /tmp/x68biosx_extract && \
@@ -199,7 +199,7 @@ python3 tools-host/cgrom_gen/cgrom_gen.py \
 ```sh
 mkdir -p arc/retropc.net/x68000/software/sharp/human302
 [ -f arc/retropc.net/x68000/software/sharp/human302/HUMN302I.LZH ] || \
-  curl --insecure -L -o arc/retropc.net/x68000/software/sharp/human302/HUMN302I.LZH \
+  curl -L -o arc/retropc.net/x68000/software/sharp/human302/HUMN302I.LZH \
     "http://retropc.net/x68000/software/sharp/human302/HUMN302I.LZH"
 
 mkdir -p /tmp/human302_extract && cd /tmp/human302_extract && \

@@ -147,8 +147,8 @@ mintはTF/STF系の**2画面（ツインウィンドウ）ファイラ**。キ�
 - **v3.10**（retropc.net配布、原作: Thule./ippoh/Leaza/AKT各氏、作者: 立花えり子氏）:
   http://retropc.net/x68000/software/tools/filer/mint/ から`MINT310.ZIP`（734.0KB）を
   ダウンロード可能。**`arc/MINT310.ZIP`にローカル保存済み**（2026-07-30取得）。
-  ページはShift_JIS・httpのみ（httpsは`SSL routines:UNSUPPORTED_PROTOCOL`で失敗、
-  `curl --insecure`が必要）。
+  ページはShift_JIS・httpのみ（httpsは証明書の検証に失敗するため、
+  `http://`のURLで取得する）。
 - **v4.4.3**（GitHub kg68k/mint、現行メンテナTcbnErik氏）:
   https://github.com/kg68k/mint の Releases ページから最新版のzip（例: `mint443.zip`）を
   ダウンロード可能（ビルド済みバイナリ`mint.x`同梱、ソースは別途`src/`）。

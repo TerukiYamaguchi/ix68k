@@ -72,7 +72,7 @@ HDDイメージ自体の作成は本手順のスコープ外（[hdd_install.md](
 
 ```sh
 # 1. ダウンロード（arc/ に既にあればスキップする。配布元サーバへの再アクセスを避ける）
-curl --insecure -L --create-dirs \
+curl -L --create-dirs \
   -o "arc/retropc.net/x68000/software/sound/adpcm/pcm8a/pcm8a102.lzh" \
   "http://retropc.net/x68000/software/sound/adpcm/pcm8a/pcm8a102.lzh"
 
@@ -95,12 +95,12 @@ done
 
 ## Step 3: ZMUSIC.X を導入する
 
-配布元: https://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）。
+配布元: http://retropc.net/x68000/software/sound/zmusic/zmusic2/ （X68000 LIBRARY）。
 
 ```sh
 # 1. ダウンロード（arc/ZMSC208X.LZH・arc/zm208e.lzh に既にあればスキップ）
-curl --insecure -L -o arc/ZMSC208X.LZH \
-  "https://retropc.net/x68000/software/sound/zmusic/zmusic2/ZMSC208X.LZH"
+curl -L -o arc/ZMSC208X.LZH \
+  "http://retropc.net/x68000/software/sound/zmusic/zmusic2/ZMSC208X.LZH"
 
 # 2. 展開
 unar -o ./zmusic_x_extracted arc/ZMSC208X.LZH
