@@ -1,0 +1,37 @@
+配布規定 / Terms of Distribution
+================================
+
+配布＆改造自由のフリーウェアです。ソースの引用＆組み込みも自由です。
+いずれの場合も連絡の必要はありません。
+
+また、大変申し訳ありませんが、本プログラムは無保証であり本プログラムに
+起因するいかなる損失にも免責とさせて頂きます。
+
+                                                  Teruki Yamaguchi
+
+
+English translation (for reference; the Japanese text above is the original)
+----------------------------------------------------------------------------
+
+This is freeware. You may freely distribute and modify it. You may also
+freely quote the source code and incorporate it into other works. In every
+case, you do not need to contact the author.
+
+This program is provided without any warranty, and the author disclaims
+liability for any loss arising from the use of this program.
+
+
+サードパーティのコード・データについて / Third-party material
+--------------------------------------------------------------
+
+上記は、このリポジトリの作者自身が書いた部分に適用されます。サードパーティの
+コード・データ（SDL3、SDL_GameControllerDB、SoftFloat、ymfm、XEiJ 由来のコード、
+シャープ製品の許諾条件が適用されるデータなど）は、それぞれのライセンスに従います。
+全文は LICENSES/ ディレクトリと README.md の「サードパーティライセンス」を
+参照してください。
+
+The terms above apply to the parts written by the author of this repository.
+Third-party code and data (SDL3, SDL_GameControllerDB, SoftFloat, ymfm, code
+derived from XEiJ, data covered by the Sharp product terms, and so on) remain
+under their own licenses. See the LICENSES/ directory and the "Third-party
+licenses" section of README.md.
