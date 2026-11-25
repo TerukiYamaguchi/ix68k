@@ -15,8 +15,6 @@ readonly VERSION="${1:-$(date +%Y%m%d)}"
 readonly ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly OUT_DIR="$ROOT/build/release"
 readonly BUILD_DIR="$OUT_DIR/cmake-build"
-readonly VENV_DIR="$OUT_DIR/venv"
-readonly PYI_DIR="$OUT_DIR/pyinstaller"
 readonly HOSTDRV_DIR="$ROOT/tools-x68k/hostdrv"
 readonly HOSTFILE_X="$ROOT/tools-x68k/hostfile/hostfile.x"
 readonly JOYGET_TEST_X="$ROOT/tools-x68k/joyget_test/joyget_test.x"
@@ -165,15 +163,12 @@ stage_x68k_tool() {
     cp "$(dirname "$src")/README.TXT" "$pkg_dir/$TOOLS_X68K_DIR/$dir/README.TXT"
 }
 
-build_hostfile_cli() {
+# ホストとHuman68k間のファイル転送CLI。Python（標準ライブラリのみ）なのでスクリプトのまま入れる。
+# 同じ ZIP の tools-host/mcp/ix68k_wire.py を読むため、mcp/ は stage_mcp が入れる。
+stage_hostfile_cli() {
     local dest="$1"
-    python3 -m venv "$VENV_DIR"
-    "$VENV_DIR/bin/pip" install --quiet pyinstaller
-    "$VENV_DIR/bin/pyinstaller" --onefile --name ix68k-hostfile \
-        --distpath "$PYI_DIR/dist" --workpath "$PYI_DIR/work" --specpath "$PYI_DIR" \
-        --paths "$ROOT/tools-host/mcp" --log-level WARN "$ROOT/tools-host/ix68k-hostfile/ix68k-hostfile"
     mkdir -p "$dest/$TOOLS_HOST_DIR/ix68k-hostfile"
-    cp "$PYI_DIR/dist/ix68k-hostfile" "$dest/$TOOLS_HOST_DIR/ix68k-hostfile/"
+    cp "$ROOT/tools-host/ix68k-hostfile/ix68k-hostfile" "$dest/$TOOLS_HOST_DIR/ix68k-hostfile/"
     cp "$ROOT/tools-host/ix68k-hostfile/README.md" "$dest/$TOOLS_HOST_DIR/ix68k-hostfile/README.md"
 }
 
@@ -216,7 +211,7 @@ assemble_package() {
     else
         cp -R "$install_dir/ix68k.app" "$pkg_dir/"
     fi
-    build_hostfile_cli "$pkg_dir"
+    stage_hostfile_cli "$pkg_dir"
     stage_x68k_tool "$pkg_dir" hostdrv "$HOSTDRV_DIR/HOSTDRV.SYS" HOSTDRV.SYS
     stage_x68k_tool "$pkg_dir" hostfile "$HOSTFILE_X" HOSTFILE.X
     stage_x68k_tool "$pkg_dir" joyget_test "$JOYGET_TEST_X" JOYGET_TEST.X
@@ -338,7 +333,7 @@ verify_zip() {
     if strings -a "$main_exe" | grep -qF "$ROOT"; then
         die "ix68kにビルド環境のパス（$ROOT）が埋め込まれている"
     fi
-    "$pkg/$TOOLS_HOST_DIR/ix68k-hostfile/ix68k-hostfile" --help > /dev/null || die "ix68k-hostfile --help が失敗"
+    python3 "$pkg/$TOOLS_HOST_DIR/ix68k-hostfile/ix68k-hostfile" --help > /dev/null || die "ix68k-hostfile --help が失敗"
     "$pkg/$TOOLS_HOST_DIR/cgrom_gen/cgrom_gen" --version > /dev/null || die "cgrom_gen --version が失敗"
     # hu68disk: 空イメージ作成→ファイル追加→取り出しの往復で動作を確認する
     local hu="$pkg/$TOOLS_HOST_DIR/hu68disk/hu68disk" hu_tmp="$check_dir/hu68disk_smoke"
@@ -360,7 +355,7 @@ main() {
     zip_path="$OUT_DIR/$name-$VERSION.zip"
 
     select_compiler
-    rm -rf "$stage_root" "$install_dir" "$PYI_DIR" "$BUILD_DIR"
+    rm -rf "$stage_root" "$install_dir" "$BUILD_DIR"
     mkdir -p "$stage_root/$name"
 
     build_and_install "$install_dir"

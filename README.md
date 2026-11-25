@@ -91,8 +91,6 @@ macOS、Linux、Windows、ヘッドレス版、テスト、設定ファイルを
   リリースZIPには共有ライブラリとして同梱します。
 - [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB):
   ゲームパッド定義（`gamecontrollerdb.txt`）をサブモジュールで取り込み、リリースZIPに同梱します（zlib License）。
-- [PyInstaller](https://pyinstaller.org/): 配布用のCGROM生成ツールと`ix68k-hostfile`の実行ファイルを作るために
-  使用します（GPL 2.0以降。ブートローダには、生成物のライセンスを制限しない例外が付いています）。
 
 ## ライセンス
 

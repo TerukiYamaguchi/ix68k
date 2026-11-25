@@ -20,8 +20,6 @@ $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $OutDir = Join-Path $Root "build\release"
 $BuildDir = Join-Path $OutDir "cmake-build"
 $InstallDir = Join-Path $OutDir "install"
-$VenvDir = Join-Path $OutDir "venv"
-$PyiDir = Join-Path $OutDir "pyinstaller"
 $StageRoot = Join-Path $OutDir "stage"
 $Name = "ix68k-windows-x64"
 $PkgDir = Join-Path $StageRoot $Name
@@ -150,17 +148,12 @@ function Build-And-Install {
     Invoke-Native cmake @("--install", $BuildDir, "--prefix", $InstallDir)
 }
 
-function Build-HostfileCli {
-    Invoke-Native python @("-m", "venv", $VenvDir)
-    $py = Join-Path $VenvDir "Scripts\python.exe"
-    Invoke-Native $py @("-m", "pip", "install", "--quiet", "pyinstaller")
-    Invoke-Native $py @("-m", "PyInstaller", "--onefile", "--name", "ix68k-hostfile",
-        "--distpath", (Join-Path $PyiDir "dist"), "--workpath", (Join-Path $PyiDir "work"),
-        "--specpath", $PyiDir, "--paths", (Join-Path $Root "tools-host\mcp"),
-        "--log-level", "WARN", (Join-Path $Root "tools-host\ix68k-hostfile\ix68k-hostfile"))
+# ホストとHuman68k間のファイル転送CLI。Python（標準ライブラリのみ）なのでスクリプトのまま入れる。
+# 同じ ZIP の tools-host\mcp\ix68k_wire.py を読むため、mcp\ は Stage-Mcp が入れる。
+function Stage-HostfileCli {
     $dest = Join-Path $PkgDir "$ToolsHostDir\ix68k-hostfile"
     New-Item -ItemType Directory -Force $dest | Out-Null
-    Copy-Item (Join-Path $PyiDir "dist\ix68k-hostfile.exe") $dest
+    Copy-Item (Join-Path $Root "tools-host\ix68k-hostfile\ix68k-hostfile") $dest
     Copy-Item (Join-Path $Root "tools-host\ix68k-hostfile\README.md") (Join-Path $dest "README.md")
 }
 
@@ -221,7 +214,7 @@ function Assemble-Package {
     }
     Copy-Item (Join-Path $InstallDir "*") $PkgDir -Recurse -Force
     Copy-VcRuntime
-    Build-HostfileCli
+    Stage-HostfileCli
     Stage-Hu68disk
     Stage-SramSwitch
     Stage-X68kTool "hostdrv" $HostdrvSys "HOSTDRV.SYS"
@@ -272,7 +265,7 @@ function Verify-Zip {
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $checkDir)
     $pkg = Join-Path $checkDir $Name
 
-    $required = @("ix68k.exe", "SDL3.dll", "gamecontrollerdb.txt", "tools-host\ix68k-hostfile\ix68k-hostfile.exe", "tools-host\ix68k-hostfile\README.md",
+    $required = @("ix68k.exe", "SDL3.dll", "gamecontrollerdb.txt", "tools-host\ix68k-hostfile\ix68k-hostfile", "tools-host\ix68k-hostfile\README.md",
         "tools-host\hu68disk\hu68disk.exe", "tools-host\hu68disk\README.md",
         "tools-host\sram_switch\sram_switch.exe", "tools-host\sram_switch\README.md",
         "tools-x68k\hostdrv\HOSTDRV.SYS", "tools-x68k\hostfile\HOSTFILE.X", "tools-x68k\joyget_test\JOYGET_TEST.X",
@@ -309,7 +302,7 @@ function Verify-Zip {
         }
         Die "未解決の依存DLL: $dll"
     }
-    Invoke-Native (Join-Path $pkg "$ToolsHostDir\ix68k-hostfile\ix68k-hostfile.exe") @("--help") | Out-Null
+    Invoke-Native python @((Join-Path $pkg "$ToolsHostDir\ix68k-hostfile\ix68k-hostfile"), "--help") | Out-Null
     Invoke-Native (Join-Path $pkg "$ToolsHostDir\cgrom_gen\cgrom_gen.exe") @("--version") | Out-Null
     # hu68disk: 空イメージ作成→日本語名ファイル追加→取り出しの往復で動作を確認する
     $hu = Join-Path $checkDir "hu68disk_smoke"
@@ -343,7 +336,7 @@ if ($Compiler -ne "msvc") {
         Log "WARN: clang-cl が無いので MSVC を使う"
     }
 }
-foreach ($d in $BuildDir, $StageRoot, $InstallDir, $PyiDir) {
+foreach ($d in $BuildDir, $StageRoot, $InstallDir) {
     if (Test-Path $d) { Remove-Item $d -Recurse -Force }
 }
 New-Item -ItemType Directory -Force $PkgDir | Out-Null

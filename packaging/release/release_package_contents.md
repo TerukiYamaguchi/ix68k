@@ -32,7 +32,7 @@ Release workflow・CMakeの `install()` 規則・配布用READMEはこのファ�
 | パス | 内容 | 同梱理由 |
 | --- | --- | --- |
 | `ix68k.exe`（Windows）/ `ix68k`（Linux）/ `ix68k.app`（macOS） | ix68k本体。macOSはSDL3動的ライブラリ・`gamecontrollerdb.txt`を内包した`.app`バンドル | エミュレータを起動するため |
-| `tools-host/ix68k-hostfile/` | `ix68k-hostfile`（Windowsは`.exe`）と `README.md`。ホストとHuman68k間で単一ファイルを転送するCLI | Python等を別途導入せずHOSTFILE機能を使うため |
+| `tools-host/ix68k-hostfile/` | `ix68k-hostfile`（Python 3のスクリプト。標準ライブラリのみで、同梱の `tools-host/mcp/ix68k_wire.py` を読む）と `README.md`。ホストとHuman68k間で単一ファイルを転送するCLI | HOSTFILE機能を使うため。MCPサーバ（`uv`）と同様にPython 3を前提とする |
 | `tools-host/hu68disk/`、`tools-host/sram_switch/` | ビルド済みバイナリと `README.md`。ソースは入れない。`hu68disk` はmacOS / Linux / Windowsに入る（macOS / Linuxは `stage.sh` がMakefileで、Windowsは `stage.ps1` がCMakeの `hu68disk` ターゲットでビルド）。`sram_switch` も全OS（Windowsは同じく `stage.ps1` がCMakeの `sram_switch` ターゲットでビルド） | ディスクイメージの操作と `sram.dat` のメモリスイッチ設定を、ビルドなしで使うため。`hu68disk` は `mkfs --type scsi` のために、無償公開されたHuman68k 3.02由来のブートコード（`scsi_ipl_data.h`）を含む。`sram_switch` の `<strings.h>` はWindowsでは `_stricmp` / `_strnicmp` へ置き換え、コンソールをUTF-8出力にする（Issue #115）。`hu68disk` のOS差は `compat.h` / `compat.c` に集約し、Windowsは文字コード変換にWin32 APIを使う（Issue #31） |
 | `tools-host/aiq-bridge/` | `aiq_bridge.py`・`docs_search.py`・`prompts/`・`README.md`（macOS / Linuxのみ。標準ライブラリだけのPythonスクリプトのまま入れる。テストと `test_aiq.sh` は入れない） | `tools-x68k/aiq/` の `AIQ.X` と対でAIQを使うため。ttyを使うためWindows版には入れない |
 | `tools-x68k/hostdrv/` | `HOSTDRV.SYS`（Human68k側のHOSTDRVリモートデバイスドライバ）と `README.TXT` | `\SYS\HOSTDRV.SYS` へ配置してホスト共有ディレクトリをゲストドライブとして使うため |
@@ -105,18 +105,17 @@ install layoutで確定する。ライブラリ探索がホストにインスト
 - IPLROM / CGROM
 - Human68kのディスクイメージ、HDS/XDF等のメディア
 - 開発用ソース、テスト、ビルドツールチェイン
-- `ix68k-hostfile` を実行するための外部Python環境
 
 ROMとメディアを同梱しない理由と利用者自身による入手・配置方法は、配布用READMEと
 `ix68k.cfg.example` に明記する。
 
 ## `ix68k-hostfile` のOS別接続方式
 
-| OS | 実行ファイル | 接続方式 | 複数インスタンス指定 |
-| --- | --- | --- | --- |
-| macOS | `ix68k-hostfile` | AF_UNIX | `IX68K_MCP_SOCK` / `--sock` |
-| Linux | `ix68k-hostfile` | AF_UNIX | `IX68K_MCP_SOCK` / `--sock` |
-| Windows | `ix68k-hostfile.exe` | TCP loopback | `IX68K_MCP_PORT` / `--port` |
+| OS | 接続方式 | 複数インスタンス指定 |
+| --- | --- | --- |
+| macOS | AF_UNIX | `IX68K_MCP_SOCK` / `--sock` |
+| Linux | AF_UNIX | `IX68K_MCP_SOCK` / `--sock` |
+| Windows | TCP loopback | `IX68K_MCP_PORT` / `--port` |
 
 WSL上のCLIからネイティブWindows版ix68kへ接続する組合せは対象外である。
 
@@ -124,6 +123,6 @@ WSL上のCLIからネイティブWindows版ix68kへ接続する組合せは対�
 
 - 各OSジョブでReleaseビルドとテストが成功すること。
 - ステージング先をZIP化し、クリーン環境へ展開してix68kがSDL3依存を解決して起動すること。
-- 各OS向け `tools-host/ix68k-hostfile/ix68k-hostfile` が外部Pythonなしで `--help` に成功すること。
+- 各OSのZIPで `python3 tools-host/ix68k-hostfile/ix68k-hostfile --help` が成功すること（Windowsは `python`）。
 - `ix68k-hostfile` のMCPワイヤ期待版が同梱ix68k本体と一致すること。
 - ROM・CGROM・Human68kメディアがZIPに含まれないこと（`disk/BLANK.XDF` は例外）。

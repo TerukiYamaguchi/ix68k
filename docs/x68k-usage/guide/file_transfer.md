@@ -13,7 +13,7 @@ HOSTDRVは `ix68k.cfg` の `hostdrv_dir` でホスト側ディレクトリを指
 [HOSTDRV ユーザーズマニュアル](hostdrv.md) と
 [HOSTDRVを使うネイティブ開発](../development/native_build.md) を参照。
 
-単一ファイル転送（HOSTFILE）は、ホストの `tools-host/ix68k-hostfile/ix68k-hostfile`（`put` / `get` / `status`）と
+単一ファイル転送（HOSTFILE）は、ホストの `python3 tools-host/ix68k-hostfile/ix68k-hostfile`（`put` / `get` / `status`）と
 ゲストの `HOSTFILE.X`（`tools-x68k/hostfile/`）を組み合わせます。MCPからの使い方は
 [mcp/daily_workflows.md](../mcp/daily_workflows.md) を参照します。
 

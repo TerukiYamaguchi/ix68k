@@ -14,7 +14,7 @@
 | ディレクトリ | 用途 |
 |---|---|
 | `mcp/` | MCPサーバーとそのPython/uv依存定義。設定手順は `docs/x68k-usage/mcp/mcp_llm_setup.md` を参照。 |
-| `ix68k-hostfile/` | ホストとHuman68k間で単一ファイルを転送するCLI。ZIPにはPyInstallerで固めた実行ファイルを入れる。 |
+| `ix68k-hostfile/` | ホストとHuman68k間で単一ファイルを転送するCLI。Python 3のスクリプトのまま入れる。 |
 | `cgrom_gen/` | ビットマップフォント（BDF）から互換CGROMを生成する。 |
 | `aiq-bridge/` | AIQ.X のホスト側ブリッジ（LLMでコマンド列を作る）。Pythonのスクリプトのまま入れる。macOS / Linuxのみ。 |
 | `hu68disk/` | ディスクイメージ（XDF/HDS）の操作ツール。ZIPにはビルド済みバイナリを入れる。macOS / Linuxのみ。 |

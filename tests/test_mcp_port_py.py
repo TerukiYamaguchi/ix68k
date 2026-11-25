@@ -7,7 +7,8 @@
 
 CMake/ctestには統合していない（Python3をビルド要件に追加するかは実装時に
 ユーザーへ確認する方針）。手動で実行する:
-    python3 tests/test_mcp_port_py.py
+    uv run --project tools-host/mcp python tests/test_mcp_port_py.py
+（ix68k_mcp_server.py が mcp パッケージを読み込むため、MCPサーバと同じuv環境で実行する）
 """
 
 import importlib.util
@@ -17,7 +18,7 @@ from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(_ROOT / "tools" / "mcp"))
+sys.path.insert(0, str(_ROOT / "tools-host" / "mcp"))
 
 
 def _load_module(name: str, path: Path):
@@ -33,8 +34,8 @@ def _load_module(name: str, path: Path):
 # ix68k-hostfileは拡張子が無いのでspec_from_file_locationで読み込む。
 # どちらのモジュールもimport時に IX68K_MCP_PORT を読むが、このテストの実行環境では
 # 未設定の想定（設定されていると既定値がずれてテストが誤って失敗し得る）。
-_server = _load_module("ix68k_mcp_server", _ROOT / "tools" / "mcp" / "ix68k_mcp_server.py")
-_hostfile = _load_module("ix68k_hostfile_cli", _ROOT / "tools" / "host" / "ix68k-hostfile")
+_server = _load_module("ix68k_mcp_server", _ROOT / "tools-host" / "mcp" / "ix68k_mcp_server.py")
+_hostfile = _load_module("ix68k_hostfile_cli", _ROOT / "tools-host" / "ix68k-hostfile" / "ix68k-hostfile")
 
 # 両実装に同じ入力表を流す（片方だけ直して片方が残る事故を防ぐ、D14）。
 _MODULES = {"ix68k_mcp_server": _server, "ix68k-hostfile": _hostfile}
