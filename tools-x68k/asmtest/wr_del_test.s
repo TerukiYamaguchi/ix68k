@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/wr_del_test.s -- IOCS _B_WRITED(0x49)/_B_READDL(0x4C)
-| 実機検証(Issue #166設計書 §5)。FD1(B:, PDA=$91)へDDAM(削除データ)ビットを
+| 動作検証(Issue #166設計書 §5)。FD1(B:, PDA=$91)へDDAM(削除データ)ビットを
 | 立てたり消したりしながらREAD/WRITE/READDL/WRITEDの組み合わせを実行し、
 | 結果を固定RAMアドレスへ並べて保存する。
 |

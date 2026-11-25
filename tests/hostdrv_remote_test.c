@@ -26,7 +26,7 @@
 
 #define README_CONTENT "HOSTDRV PHASE2 OK\n"
 
-/* comcod $47 の検索属性(req+13)。hostdrv_design.md §5・実機トレースで確認したDIRの
+/* comcod $47 の検索属性(req+13)。hostdrv_design.md §5・トレースで確認したDIRの
  * 一般検索値(READONLY|SYSTEM|DIRECTORY|ARCHIVE=$35)をhostdrv_remote.cの
  * private HOSTDRV_ATTR_*ミラーとして再定義する。 */
 #define ATTR_READONLY       0x01u

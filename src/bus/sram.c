@@ -159,7 +159,7 @@ void x68k_bus_reset_vectors(x68k_bus_t *bus) {
  * IPLROM 内に元々ある単独 rte 命令（$0000FE006C、nmi_handler 末尾。
  * dis/disasm/iplromxv/IPLROMXV_addr.S:52 で確認済み）を使う。RAM[0x0100] は
  * BIOS 実行前だけの一時的な安全地帯で、Human68k 起動後はワークエリアとして
- * 再利用され得る（実機確認で実際に上書きされ「おかしな命令」例外に化けた）。
+ * 再利用され得る（動作確認で実際に上書きされ「おかしな命令」例外に化けた）。
  * ROM は read-only で常時 $FE0000-$FFFFFF にマップされ続けるため安全。
  *
  * ベクタ24自体もIPLROM起動時のベクタ一括フィルにすぐ上書きされてしまう

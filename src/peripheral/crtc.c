@@ -269,7 +269,7 @@ static void gvram_apply_priority(const x68k_bus_t *bus, gvram_page_t out[4], int
 
 /* ビデオコントローラ R2 ($E82600) の GS4-0 (bit4-0) からページ page_idx
  * の表示 可否を判定する（『Inside X68000』
- * 図31、3-5-2節、実機検証で確認）。 npages
+ * 図31、3-5-2節、動作検証で確認）。 npages
  * は現在のグラフィック画面モードのページ数（1/2/4）。 1ページ:
  * bit3-0が全て0ならOFF（bit4は同一意味の冗長ビット） 2ページ:
  * page0=bit1-0、page1=bit3-2（各2bit、00=OFF、それ以外=ON） 4ページ: page N = bit
@@ -357,7 +357,7 @@ int x68k_bus_get_gvram_pages(const x68k_bus_t *bus, gvram_page_t out[4]) {
          * R1（$E82500）下位バイトのGP0-GP3が動的に決める。バンク選択自体は
          * x68k_render_gvram_line() 側（page_sel）で行うため、ここでは base_off は
          * 使わない（0のまま）。R12/R13 のみが有効（R14-R19
-         * は無視。実機検証で判明、XEiJ DrawingMode.java
+         * は無視。動作検証で判明、XEiJ DrawingMode.java
          * 1024dot系描画ルーチン準拠）。
          * 1024ドットは16色のみで、R20の色数指定（256色・65536色）にかかわらず
          * 16色として扱う。 */

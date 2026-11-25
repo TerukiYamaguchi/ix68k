@@ -217,7 +217,7 @@ int iocs_handler(mc68k_state_t *cpu, int trap_num, void *ctx) {
                     * fdc.cに実装済みのSEEK(opcode 0x0F)を、SCSI/SASI側では
                     * Seek(6)(CDB opcode 0x0B、ROMバイナリ$FF9D16実測)を発行
                     * する。SCSI/SASI側の発行先はSPC($E96020、scsi.c)では
-                    * なく内蔵HDC($E96000、sasi.c)であることを実機トレース
+                    * なく内蔵HDC($E96000、sasi.c)であることをトレース
                     * （$E96001/$E96003アクセス）で確認済み。sasi.cにSeek(6)を
                     * 追加実装済みのため両経路ともROM委譲で正しく動作する */
         case 0x43: /* _B_DSKINI: ROM委譲。ROMハンドラ($FF8CCC)が期待する
@@ -264,7 +264,7 @@ int iocs_handler(mc68k_state_t *cpu, int trap_num, void *ctx) {
                     * EJECT MASK(bit6、物理イジェクトボタン無効化)とは別概念、
                     * 混同しないこと）を見てブロックする。ROM委譲後もmode=2/6
                     * でロックしたドライブはmode=1/_B_EJECTから正しく保護
-                    * される（実機検証済み）ため、_B_EJECTは「排出禁止時にも
+                    * される（動作検証済み）ため、_B_EJECTは「排出禁止時にも
                     * 排出できる」わけではない（過去の想定は誤りだった）。
                     * ブートローダのnot-ready/署名不一致プローブでの実排出
                     * （IPLROMXV FF039E→FF042C）は、ロックされていないドライブ
@@ -300,7 +300,7 @@ int iocs_handler(mc68k_state_t *cpu, int trap_num, void *ctx) {
             case 8: { /* 前回検査後のイジェクト有無。ROM は $09E7+drv*2 を返すが、
                        * これは $E94005 の物理 DISK IN 変化を割り込み($FF1468)で
                        * 拾う仕組みで、MCP eject_disk 等のホスト側イジェクトを
-                       * 取りこぼす。実機検証済みのホスト側ラッチを使い続ける。 */
+                       * 取りこぼす。動作検証済みのホスト側ラッチを使い続ける。 */
                 int ejected = x68k_bus_fdc_take_ejected_flag(bus, drv);
                 mc68k_set_dreg(cpu, 0, ejected ? (uint32_t)-1 : 1u);
                 return 1;

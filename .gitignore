@@ -123,6 +123,6 @@ __pycache__/
 *.py[cod]
 tools-host/mcp/.venv
 
-# HOSTDRV実機検証用のスクラッチディレクトリ（ix68k.cfgのhostdrv_dirが指す先。
+# HOSTDRV動作検証用のスクラッチディレクトリ（ix68k.cfgのhostdrv_dirが指す先。
 # テスト中のファイルを置くだけで内容に意味はない）
 tests/work/

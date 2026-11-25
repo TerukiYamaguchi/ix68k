@@ -59,7 +59,7 @@ void x68k_render_gvram_line(const uint8_t *gvram, uint32_t *out_line, int w,
             /* R2(GS4-0)非表示時はGVRAMの実データを読まずインデックス0を使う
              * （下地を透過させる「消える」動作ではなく、パレット0番の色で描画する。
              * ただしパレット0番の値が0x0000＝未設定なら他インデックス同様に透過する。
-             * 実機検証で判明・訂正）。65536色は上でvisible=false時に
+             * 動作検証で判明・訂正）。65536色は上でvisible=false時に
              * continue済みのため、ここに来るのは常にvisible=trueのケース。 */
             if (pages[p].mask == 0) {
                 /* 65536色モード。GVRAMの16bit色コードは上位8bit/下位8bitに分けられ、

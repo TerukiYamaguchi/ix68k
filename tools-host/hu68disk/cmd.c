@@ -461,7 +461,7 @@ static int copy_tree(image_t *src, const dir_t *sdir, image_t *dst, const dir_t 
 }
 
 /* copyall: src イメージの src_path 配下を丸ごと dst イメージの dst_path へ再帰コピーする
- * （実機 Human68k の `COPYALL /S A:\*.* C:` 相当）。異なる2つのイメージファイルを
+ * （実際の Human68k の `COPYALL /S A:\*.* C:` 相当）。異なる2つのイメージファイルを
  * 対象にする点が他コマンドと異なる（main.c で両方 image_load 済みのものを渡す）。 */
 int cmd_copyall(image_t *src, const char *src_path, image_t *dst, const char *dst_path) {
     char spsjis[512], dpsjis[512];

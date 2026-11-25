@@ -3,7 +3,7 @@
 # HOSTDRV.SYS（-nostartfiles、tools-x68k/hostdrv/Makefile）とは別系統: HOSTFILE.X は
 # argv と stdio(printf) が必要なため標準スタートアップをそのままリンクする
 # （elf2x68k の x68k.specs が x68kcrt0.o + -lx68k -lx68kdos -lx68kiocs を自動リンク）。
-# 実機検証済み（Issue #39 実装前チェックコメント参照）。
+# 動作検証済み（Issue #39 実装前チェックコメント参照）。
 
 CROSS  = m68k-xelf-
 CC     = $(CROSS)gcc

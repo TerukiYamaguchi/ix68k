@@ -1,7 +1,7 @@
 /* SCSI CD-ROM(CloneCD)メディア層の単体テスト(P1)。
  * docs/ix68k-internals/design/scsi_design.md §4/§9準拠。ローカルの実イメージ(245MB)には
  * 依存せず、数セクタの最小CloneCDフィクスチャ(.ccd+.img)を都度生成して検証する。
- * 実イメージによる確認は統合テスト(P2以降、MCP/実機検証)として別枠。 */
+ * 実イメージによる確認は統合テスト(P2以降、MCP/動作検証)として別枠。 */
 #include "bus/bus_internal.h"
 #include <assert.h>
 #include <stdio.h>

@@ -131,7 +131,7 @@ static void dmac_set_reg_w(x68k_bus_t *b, uint32_t off, uint32_t val) {
 
 /* MAR専用: 68000のアドレス空間は24bitのため、ch0/ch1は実機でもMARの
  * 最上位バイト(off+0)を使わず下位24bit(off+1〜off+3)だけを読み書きする
- * （実機計装で確認）。ch2のMARは`dmac_reg_l`で4バイト全体を読む。この
+ * （計装で確認）。ch2のMARは`dmac_reg_l`で4バイト全体を読む。この
  * 非対称性は実機の挙動を忠実に再現するための意図的なもの。offはch_base +
  * DMAC_REG_MARを渡す（内部でoff+1〜off+3を読む）。 */
 static uint32_t dmac_reg_addr24(const x68k_bus_t *b, uint32_t off) {
@@ -548,7 +548,7 @@ int dmac_write8(x68k_bus_t *b, uint32_t addr, uint8_t val) {
     }
     if (addr == 0xE84007u) {
         /* DMAC ch0 CCR: bit7=START。FDC用。ch1と異なり、CCR STARTはFDCが
-         * READ/WRITE DATAコマンドを受け取るより先に発行される（実機計装で
+         * READ/WRITE DATAコマンドを受け取るより先に発行される（計装で
          * 確認、何百セクタも例外なく一貫した順序）。この時点ではFDCがどの
          * セクタを転送するか未確定（コマンドのcyl/head/secをまだ受け取って
          * いない）ため、ここでは武装フラグを立てるだけで転送しない。実転送は
@@ -890,7 +890,7 @@ void x68k_bus_adpcm_tick(x68k_bus_t *b, int cpu_cycles) {
  * 武装済み(dmac_ch0_armed)であれば、その時点で生値ストア済みのOCR/SCR/
  * MTC/MARを読み出し、fdc.cが設定した実行データフェーズ
  * (b->fdc.dma_ptr/dma_remaining/dma_dir)を汎用エンジンで消費する。
- * DARは$E94003固定のはず（実機計装で確認、例外なし）だが、想定外の値なら
+ * DARは$E94003固定のはず（計装で確認、例外なし）だが、想定外の値なら
  * フォールバックに委ねる（ch1のDAR値ゲート判定と同じ考え方）。 */
 int dmac_ch0_fdc_transfer(x68k_bus_t *b) {
     if (!b->dmac.ch0_armed)

@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/txgr_priority_test.s -- ビデオコントローラR1 TX/GR優先順位
-| の実機検証用使い捨てテスト。
+| の動作検証用使い捨てテスト。
 |
 | mode0で赤い四角(GVRAM)を描き、その上に重ねて文字列を表示する。
 | GETCHARで一時停止する。

@@ -80,7 +80,7 @@ void adpcm_pcm_write8(adpcm_t *a, uint32_t off, uint8_t val) {
          * するのみ）で確認済み。ROM側_ADPCMOUTは$ff00バイトごとのチャンク転送
          * のたびにPLAY STを再送信するため、ここでリセットすると数チャンク跨ぎの
          * 長時間再生でチャンク境界ごとに予測器が0に飛び、その直後だけ音量が
-         * 小さく聞こえる（実機検証で確認済み）。
+         * 小さく聞こえる（動作検証で確認済み）。
          */
         if (val & 0x01u) {
             a->mode = ADPCM_MODE_IDLE;

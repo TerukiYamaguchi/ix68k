@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/crtmod_test.s -- _CRTMOD 代表11モードの描画/スクロール/優先順位切替 実機検証
+| tools-x68k/asmtest/crtmod_test.s -- _CRTMOD 代表11モードの描画/スクロール/優先順位切替 動作検証
 |
 | GETCHAR ($ff01, エコーあり) でチェックポイント毎に一時停止する。
 | MCP の key(action="press", ...) で1文字送って進める。各PAUSE直前が

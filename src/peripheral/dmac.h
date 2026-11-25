@@ -70,7 +70,7 @@ typedef struct {
     int syncing;            /* 1=DMA自身のバスアクセス中。再帰同期を抑止する */
     int ch0_armed;          /* DMAC ch0(FDC) CCR STARTによる武装フラグ。
                                ch1と異なりCCR STARTがFDCコマンド送出より先に発行される
-                               （実機計装で確認、ゼロ例外）ため、CCR書き込み時点では
+                               （計装で確認、ゼロ例外）ため、CCR書き込み時点では
                                FDCがまだどのセクタを転送するか未確定で転送できない。
                                このフラグだけ立てて、実転送はfdc_exec()がREAD/WRITE
                                DATAコマンド実行完了後にdmac_ch0_fdc_transfer()を呼んで

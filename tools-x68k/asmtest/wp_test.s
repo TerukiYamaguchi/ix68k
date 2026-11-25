@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/wp_test.s -- ライトプロテクト(WP)実機検証(Issue #167設計書 §5)
+| tools-x68k/asmtest/wp_test.s -- ライトプロテクト(WP)動作検証(Issue #167設計書 §5)
 | FD1(B:, PDA=$91) がライトプロテクト中に _B_DRVSNS/_B_WRITE/_B_FORMAT が
 | 正しくWP/NWを返すことを確認する。結果を固定RAMアドレスへ並べて保存する。
 |

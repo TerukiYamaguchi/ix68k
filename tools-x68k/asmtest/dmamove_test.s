@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/dmamove_test.s -- IOCS $8A-$8D (_DMAMOVE/_DMAMOV_A/_DMAMOV_L/_DMAMODE)
-| ROM委譲 + DMAC ch2実装の実機検証
+| ROM委譲 + DMAC ch2実装の動作検証
 |
 | メインRAMは0x000000-0x0FFFFFの1MBのみ。出力は末尾寄りの0xF8000以降に固定
 | 配置する（プログラム自体・他テストと衝突しない領域、fntget_test.s踏襲）。

@@ -112,7 +112,7 @@ Write(6)/(10) は差分だけへ書き込みます。CD-ROM・MOには指定で�
   CD-ROM対応。`CDROM.X`はINQUIRYのAllocation Lengthに92を指定し、内蔵SCSI ROMは
   その値をDMAC転送カウントへそのまま設定するため、標準応答36バイト以降を要求長まで
   ゼロ埋めして返します。36バイトでDATA INを終了するとDMACカウントが残り、IOCSが完了待ちに
-  なります。実機検証では`CDROM 2`が対象CloneCDのルート68項目（2ページ）を正常表示しました。
+  なります。動作検証では`CDROM 2`が対象CloneCDのルート68項目（2ページ）を正常表示しました。
 - **P3完了**（READ TOC）: `scsi_write_toc_descriptor()`でトラック/リードアウトの
   8バイトディスクリプタを組み立てます。`start_track`が0(トラック1扱い)/`0xAA`(リードアウトのみ)
   /実トラック番号を受理し、範囲外はILLEGAL REQUEST。MSF=0はLBAをビッグエンディアン32bit、
@@ -121,11 +121,11 @@ Write(6)/(10) は差分だけへ書き込みます。CD-ROM・MOには指定で�
   常に完全な応答長を記録する（安全な方式）。`cd_leadout_adr_control`
   （`.ccd`のPoint=0xA2エントリのADR/Control）を新規フィールドとして`scsi_unit_t`に追加。
   `tests/scsi_cdrom_test.c`にLBA/MSF変換・リードアウトのみ要求・Allocation Length境界・
-  HDD回帰の5ケースを追加。実機検証: `SUSIE -ID2 *:`常駐で`SUSIE E: -P`のDriver欄が
+  HDD回帰の5ケースを追加。動作検証: `SUSIE -ID2 *:`常駐で`SUSIE E: -P`のDriver欄が
   **IS9**、Volume欄が**MKCDP0001**、`DIR E:`でISO-9660ファイル一覧が正常表示されました。
 - **P4完了**（Human68k運用）: 起動HDS(`disk/SYSTEM_HD.HDS`)のCONFIG.SYSに
   `DEVICE = \SYS\SUSIE.X -ID2 *:`を追加、`ix68k.cfg`に`scsi_disk2 = CD`
-  （空CD-ROMドライブとして起動時接続）を追加。実機検証: 冷起動でSUSIE.Xが自動常駐し
+  （空CD-ROMドライブとして起動時接続）を追加。動作検証: 冷起動でSUSIE.Xが自動常駐し
   `D:`がメディア未挿入(`** Not Inserted **`)で確保され、MCPでイメージ挿入後は
   reset無しで認識、`DIR D:`/`TREE D:`/`COPY D:\...`（対象CloneCDからのファイル
   コピー）が正常動作しました。
@@ -223,12 +223,12 @@ SPC Hard Error(INTS bit1)・Reset Condition等は`ints`ビット管理のみで�
 | 日付 | 内容 |
 |------|------|
 | 2026-09-05 | センスデータをSCSI-2固定長18バイト（`SCSI_SENSE_LENGTH`）へ拡張し、`spc_set_sense()`で組み立てを一本化。ASC/ASCQ(バイト12-13)と追加センス長(バイト7)を設定するようにしました。Mode Sense(6)の未対応ページ（NetBSD sd(4)が要求するpage 4/5）はセンスを設定せずCHECK CONDITIONだけ返していたため、続くRequest Senseが全ゼロを返してきました。ILLEGAL REQUEST / ASC=0x24を設定するよう修正。回帰試験は`tests/scsi_status_test.c`の`test_mode_sense_unsupported_page_sets_illegal_request_sense` |
-| 2026-09-05 | COMMANDフェーズのCDB長確定を`spc_store_out_byte()`へ共通化し、`SCMD`=Set ACK/REQ経路だけでなく`DREG`書き込み（プログラム転送/DMAC）経路からも通るようにしました。DREG経路の完了判定に`buf_index == buf_limit`を追加。NetBSD/x68kの`spc`ドライバはCDBをTransfer+DREG連続書き込みで送るため、従来は先頭1バイトしか受領できず`INTS.CC`が発火せず`scsibus0: waiting 2 seconds for devices to settle...`で停止してきました。回帰試験は`tests/scsi_dreg_cdb_test.c`。実機検証: NetBSD 10.1(GENERIC)がsd0〜sd7のプローブを完走し`root on sd0a`のマウントまで到達 |
+| 2026-09-05 | COMMANDフェーズのCDB長確定を`spc_store_out_byte()`へ共通化し、`SCMD`=Set ACK/REQ経路だけでなく`DREG`書き込み（プログラム転送/DMAC）経路からも通るようにしました。DREG経路の完了判定に`buf_index == buf_limit`を追加。NetBSD/x68kの`spc`ドライバはCDBをTransfer+DREG連続書き込みで送るため、従来は先頭1バイトしか受領できず`INTS.CC`が発火せず`scsibus0: waiting 2 seconds for devices to settle...`で停止してきました。回帰試験は`tests/scsi_dreg_cdb_test.c`。動作検証: NetBSD 10.1(GENERIC)がsd0〜sd7のプローブを完走し`root on sd0a`のマウントまで到達 |
 | 2026-09-06 | DREG read/writeを`SSTS.TRIP && TC != 0`でゲートし、短いDATA IN応答の完了後に余剰DREGアクセスがSTATUS/MSG INを消費しないようにしました。SSTS.DF/DEを実データ残量で更新し、18バイトのREQUEST SENSEへ32バイトを要求する回帰試験で、18バイト時点のDFクリア・DEセット・TC=14維持および32回読出し後のSTATUS維持を確認します。 |
 | 2026-09-04 | MO(リムーバブル)ライトプロテクトの自動判定・トグルAPIを実装（`x68k_bus_scsi_write_protected()`/`x68k_bus_scsi_set_write_protect()`）。`attach_hdd()`に`r+b`→`rb`フォールバックを追加し読み取り専用イメージの接続を可能にしました。GUI/MCP配線はこの時点では未着手 |
 | 2026-09-03 | IOCS `_B_VERIFY`(0x41)のSCSI/SASI経路(PDA `$8n`)はSCAN EQUALを使わず、ROM(`$FF94C0`)がREAD(6)(0x08、CDB雛形`$FF9D0A`)を発行してから`cmpm.b`でCPU比較する設計と判明（1KiB単位、`sasi.c`の既存READ実装で足りるため追加実装は不要）。戻り値はFDD側(生ステータスロング)と異なり一致=`0`・不一致=`$FFFFFFFE`（ROM実測`$FF9514`の`moveq #$fe,d0`）。FDD側のSCAN仕様は`docs/ix68k-internals/design/fdc_design.md`を参照 |
 | 2026-09-03 | 内蔵HDC(`sasi.c`、$E96000)のSELECT存在判定を、本ファイルのSPC($E96020、`scsi.c`)と**同一条件 `fp != NULL \|\| present`** に統一した（`units[]`は両者で共有する同じ配列なので、存在判定が2種類あってはならない）。これによりメディア未挿入の空リムーバブルも内蔵HDC経由のSELECTに応答し、未接続ID(`present=0`)は応答せずROM側のSELECTタイムアウトに委ねます。あわせて`sasi.c`にLUN(CDB[1] bit5-7)の解釈を追加した（LUN0のみ実装、それ以外はINVALID COMMAND）。**注意**: SASIの1バイトセンス(`$20` INVALID COMMAND / `$21` INVALID SECTOR ADDRESS)は、本ファイルのSPCが返す拡張センス(`[0]=0x70`, `[2]=センスキー`)とは**別形式**であり、互いに読み替えできません。詳細は`docs/ix68k-internals/support/iocs_support.md`の該当エントリ参照 |
-| 2026-09-03 | Seek(6)(0x0B)を新規実装。範囲内はGOOD(no-op)、範囲外はILLEGAL REQUEST（XEiJ `scuDoSeek6`準拠）。メディア無し/未接続は既存のmedia guardに委ねる(0x0Bをexemptリストに追加しない)。**注意**: IOCS `_B_SEEK`(0x40)のSCSI/SASI側(PDA $80-$8F)は本ファイルのSPC($E96020)ではなく内蔵HDC($E96000、`sasi.c`)経由でROMがこのCDBを発行する（実機トレースで確認、詳細は`docs/ix68k-internals/support/iocs_support.md`の該当エントリ参照）。ここでのSeek(6)実装はSPCを直接叩く別経路向けとして意味を持つが、`_B_SEEK`自体の実装場所ではない |
+| 2026-09-03 | Seek(6)(0x0B)を新規実装。範囲内はGOOD(no-op)、範囲外はILLEGAL REQUEST（XEiJ `scuDoSeek6`準拠）。メディア無し/未接続は既存のmedia guardに委ねる(0x0Bをexemptリストに追加しない)。**注意**: IOCS `_B_SEEK`(0x40)のSCSI/SASI側(PDA $80-$8F)は本ファイルのSPC($E96020)ではなく内蔵HDC($E96000、`sasi.c`)経由でROMがこのCDBを発行する（トレースで確認、詳細は`docs/ix68k-internals/support/iocs_support.md`の該当エントリ参照）。ここでのSeek(6)実装はSPCを直接叩く別経路向けとして意味を持つが、`_B_SEEK`自体の実装場所ではない |
 | 2026-08-19 | CD-ROM(CloneCD)対応 P4/P5: CONFIG.SYS/x68000.cfgへのSUSIE.X常駐登録、MCP `disk()`docstring更新、`SUSIE.X.md`検証状態更新。全フェーズ完了 |
 | 2026-08-19 | CD-ROM(CloneCD)対応 P3: READ TOC(0x43)を新規実装 |
 | 2026-08-19 | CD-ROM(CloneCD)対応 P2: Inquiryのperipheral device type分岐、Mode SenseのWPビット、Format Unit/Write(6)/(10)のDATA PROTECT拒否を追加 |

@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/fntget_test.s -- _FNTGET(0x19) ROM委譲の実機検証
+| tools-x68k/asmtest/fntget_test.s -- _FNTGET(0x19) ROM委譲の動作検証
 |
 | 'A'(0x41)の8x16/16x16 ANKパターンを取得し、結果を0xF8000へ書き出す
 | （メインRAMは0x000000-0x0FFFFFの1MBのみ。プログラム自体と衝突しない

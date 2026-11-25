@@ -82,7 +82,7 @@ MSM6258V自体が持つレジスタは『Inside X68000』図32によれば実質
   PAUSE→NMIテストと同じ切り分け方針）。
 - 単体テスト`audio_mixer_test`: リサンプル比率(65サンプル@3900Hz→約735フレーム
   @44100Hz)、パンon/off時のL/R値、`out_capacity_frames`頭打ちを検証。
-- 実機検証: 使い捨てアセンブリテスト（`.incbin`で`disk/otoko100_sound/BEAM.PCM`
+- 動作検証: 使い捨てアセンブリテスト（`.incbin`で`disk/otoko100_sound/BEAM.PCM`
   を直接埋め込み）で`_ADPCMOUT`(ウェイトモード、左右ともON)を実行し、
   SDL音声デバイスが正常初期化（失敗ログなし）の上で実際にスピーカーから
   効果音が再生されることをユーザーが確認。ビルド警告ゼロ・`ctest`全通過
@@ -113,7 +113,7 @@ MSM6258V自体が持つレジスタは『Inside X68000』図32によれば実質
   不要な設計）。
 - 単体テスト`audio_mixer_test`に`audio_resample_mono()`のダウンサンプル
   （44100Hz→15625Hz相当）・アップサンプル対称性を追加。
-- 実機検証: 使い捨てアセンブリテスト（`_ADPCMINP`で録音→同じバッファを
+- 動作検証: 使い捨てアセンブリテスト（`_ADPCMINP`で録音→同じバッファを
   `_ADPCMOUT`で再生するループバック）で、一時計装（`fprintf`でマイク
   capture・encode()直前の実サンプル値を計測）により発話時に実際の音声
   レベル（ピーク700-1800/32767）がencode()まで正しく到達することを確認。
@@ -126,7 +126,7 @@ MSM6258V自体が持つレジスタは『Inside X68000』図32によれば実質
 | 日付 | 内容 |
 |------|------|
 | 2026-08-23 | deadline超過時の描画スキップ、SDL出力キューの枯渇後の再バッファ、CPU周期の60Hz端数累算を追加。`test_audio_recovery`と`frame_timing_test`を追加し、Debug/RelWithDebInfoで全テスト成功。 |
-| 2026-07-15 | ADPCM音声出力を実装。`src/audio/audio_mixer.c`（最近傍リサンプル+パン合成の純ロジック）・`pal_audio_*`を新設。現在のSDL3実装は`SDL_AudioStream`を使用し、ヘッドレスでは出力を破棄します。実機で`disk/otoko100_sound/BEAM.PCM`の再生音を確認 |
+| 2026-07-15 | ADPCM音声出力を実装。`src/audio/audio_mixer.c`（最近傍リサンプル+パン合成の純ロジック）・`pal_audio_*`を新設。現在のSDL3実装は`SDL_AudioStream`を使用し、ヘッドレスでは出力を破棄します。ix68kで`disk/otoko100_sound/BEAM.PCM`の再生音を確認 |
 | 2026-07-15 | ADPCM録音入力を実装。`pal_audio_capture_*`・`audio_resample_mono()`・`adpcm.c`の`rec_ring`を新設。ユーザーが録音→再生ループバックの音声を実際に確認 |
 | 2026-07-16 | アレイ/リンクアレイチェーン(_ADPCMAOT/AIN/LOT/LIN)と`_ADPCMMOD`(一時停止/再開)を実装。詳細は`docs/ix68k-internals/support/dmac_support.md`のch3節参照 |
 | 2026-07-25 | `x68k_bus_adpcm_tick()`をフレーム単位(60Hz)からCPUチャンク単位(`MFP_TICK_CYCLES`粒度)呼び出しへ変更（「taken=0の実ギャップ」修正）。音楽ドライバのCCR SAB→数千サイクル後CCR START再武装がフレーム境界を跨ぐと、旧実装ではそのフレームが丸ごと0バイト転送になり実機の0.4msギャップが16.7msの音切れへ拡大してきました。転送予算をフレーム単位Bresenham(`fs/120`)からサイクル単位Bresenham(`fs*cycles/(2*CPU_HZ)`)へ置き換え。回帰確認用に`tests/adpcm_dma_test.c`を新設 |

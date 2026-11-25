@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/datetime_cnv_test.s -- _DATEASC/_TIMEASC/_DAYASC/_DATECNV/_TIMECNV
-| (0x5A/0x5B/0x5C/0x58/0x59) ROM委譲の実機検証
+| (0x5A/0x5B/0x5C/0x58/0x59) ROM委譲の動作検証
 |
 | 結果をRAM上の固定アドレスへ書き出し、MCP read_memoryで確認する。
 | 0xF8000: DATEASC出力文字列("yyyy/mm/dd",0想定)

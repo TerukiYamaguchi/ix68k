@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/scan_equal_test.s -- IOCS _B_VERIFY(0x41)/FDC SCAN EQUAL
-| 実機検証(Issue #165設計書 §5.3)。FD1(B:, PDA=$91)へ1024バイト書き込んでから
+| 動作検証(Issue #165設計書 §5.3)。FD1(B:, PDA=$91)へ1024バイト書き込んでから
 | 複数パターンでベリファイし、結果を固定RAMアドレスへ並べて保存する。
 |
 | D1.w = PDA<<8 | flags($70=MFM+retry+seek, $30=FM+retry+seek)

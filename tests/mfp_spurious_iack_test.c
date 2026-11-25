@@ -140,7 +140,7 @@ static void test_imr_write_clears_pending_leaving_stale_line(void) {
  *    IPLROM内の単独rte命令($FE006C)を指すよう固定され、スプリアス割り込みが
  *    実際にRTEで静かに元の位置へ復帰すること。
  *    RAM[0x0100]（install_rte_stubs()のRTEスタブ）はBIOS実行前だけの一時的な
- *    安全地帯で、Human68k起動後はワークエリアとして再利用され得る（実機確認で
+ *    安全地帯で、Human68k起動後はワークエリアとして再利用され得る（動作確認で
  *    実際に上書きされ「おかしな命令」例外に化けた）ため、恒久的な固定先には
  *    使えない。ここではROM領域を模すため iocs_rom バッファへ直接rteを書く。 */
 static void test_pinned_spurious_vector_returns_via_rte(void) {

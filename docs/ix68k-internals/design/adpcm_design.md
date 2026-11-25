@@ -67,7 +67,7 @@ CPU デバッグ停止中もホストの capture キューを滞留させない�
 - `adpcm_test`：MSM6258 のレジスタ、モード、PPI／OPM 制御。
 - `adpcm_dma_test`：ch3 の実時間転送、チェーン、停止・再開、完了割り込み。
 - `audio_mixer_test`：再生・録音リサンプリング、パン、最終クリップ。
-- 実機検証では `_ADPCMOUT` の再生と `_ADPCMINP` の録音・再生ループバックを確認します。
+- 動作検証では `_ADPCMOUT` の再生と `_ADPCMINP` の録音・再生ループバックを確認します。
 
 ## 変更履歴
 

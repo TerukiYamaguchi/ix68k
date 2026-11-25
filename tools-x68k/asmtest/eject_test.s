@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/eject_test.s -- Issue #160 Phase 4実機検証
+| tools-x68k/asmtest/eject_test.s -- Issue #160 Phase 4動作検証
 | _B_EJECT(0x4F)本体のROM委譲を検証する。FD1(B:, PDA=$91)に対し、
 | ロック無しで_B_EJECTを発行し実際に排出されるか、非FDD PDA($80)と
 | 未搭載ドライブ(PDA=$93)がスタブどおりD0=-1を返すかを確認する。

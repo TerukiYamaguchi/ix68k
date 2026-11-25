@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/datebcd_test.s -- _DATEBCD/_TIMEBCD(0x50/0x52) ROM委譲の実機検証
+| tools-x68k/asmtest/datebcd_test.s -- _DATEBCD/_TIMEBCD(0x50/0x52) ROM委譲の動作検証
 |
 | 2026/07/13(月曜・閏年カウンタ=year%4=2) と 12:34:56 を変換し、
 | 手計算した期待値と実機出力を比較する。

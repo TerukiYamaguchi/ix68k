@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/r2_effects_test.s -- Issue #119 R2半透明・特殊プライオリティ 実機検証
+| tools-x68k/asmtest/r2_effects_test.s -- Issue #119 R2半透明・特殊プライオリティ 動作検証
 |
 | mode4(16色4ページ,512x512)で5バンドを縦に並べ、各バンドでGRページに
 | 偶数コード(2,左64px)/奇数コード(3,右64px)の帯を描き、R2を切り替えて比較する。

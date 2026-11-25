@@ -133,7 +133,7 @@ RECALIBRATE / SEEK / READ DATA / WRITE DATA 完了後に `fdc.irq` が立ち、
 - **戻り値は`_B_SEEK`と同様`ST0<<24|ST1<<16|ST2<<8|C`の生
   ステータスロングで、一致時も非ゼロ(`$xx000800|C`、ST2のSH)になる**。
 - 検証: FD1へ1024バイト書き込み後、一致/不一致/ワイルドカード(`$FF`)/
-  境界値(R=0,R=9,N=4,N=3+FM)/シリンダ範囲外/メディア無しをMCP実機トレースで
+  境界値(R=0,R=9,N=4,N=3+FM)/シリンダ範囲外/メディア無しをMCPトレースで
   確認、TSRフック到達性をRAMベクタ`$0504`のディスアセンブルで確認、実ソフト
   `COPY /V`が正常完了しバイト一致することを確認（詳細は`iocs_support.md`
   2026-09-03エントリ、設計書`docs/ix68k-internals/design/fdc_design.md`）。
@@ -179,7 +179,7 @@ RECALIBRATE / SEEK / READ DATA / WRITE DATA 完了後に `fdc.irq` が立ち、
 - 単体テスト`tests/fdc_deleted_test.c`（T1-T13/T16/T17）+
   `tests/fdc_eject_test.c`（イジェクト・挿入・`format_track()`でのDDAM
   クリア）。
-- **実機(MCPトレース)検証（2026-09-04）**: RAMベクタ`$0524`/`$0530`
+- **MCPトレース検証（2026-09-04）**: RAMベクタ`$0524`/`$0530`
   （`$0400+4*0x49`/`$0400+4*0x4C`）をディスアセンブルし、Human68k中継
   ルーチン経由でROM本体`$00FF8FE4`/`$00FF907C`（いずれも設計書§1.1/1.2で
   特定した`_B_WRITED`/`_B_READDL`本体のPDA検査後）へジャンプすることを
@@ -201,7 +201,7 @@ RECALIBRATE / SEEK / READ DATA / WRITE DATA 完了後に `fdc.irq` が立ち、
   実行): `_B_WRITED`/`_B_READDL`とも`D0=$49420000`でST0のNR(bit27)が
   立つことを確認、ハングなし。ライトプロテクトは`fdc.c`のWRITE系
   応答生成にNW設定コードが存在しないことをコードレビューで確認済み
-  （実機テスト不要。後日「FDDライトプロテクト」節の実装で対応）。`trace_iocs`でIOCS呼び出し自体
+  （動作テスト不要。後日「FDDライトプロテクト」節の実装で対応）。`trace_iocs`でIOCS呼び出し自体
   （D1/D2/D3/A1）が期待通りROMへ渡っていることも確認。
 
 ### FDDライトプロテクト(WP)のエミュレーション（2026-09-04）
@@ -284,7 +284,7 @@ RECALIBRATE / SEEK / READ DATA / WRITE DATA 完了後に `fdc.irq` が立ち、
   （`x68k_bus.c:590`付近のエッジ検出経由）。
 - 単体テスト: `tests/fdc_reset_test.c`（実行データフェーズのクリア、MSR CB解除、
   メディア状態/`cur_cyl[]`の保持、`irq`とIOI側の整合、SENSE INTERRUPT STATUS
-  応答、リセット後のイジェクト解除、電源投入直後の`st0`確認）。MCP実機相当
+  応答、リセット後のイジェクト解除、電源投入直後の`st0`確認）。MCP動作
   検証（冷起動、68000/68EC030両構成での連続リセット、FDアクセス後のリセット、
   FD未挿入時のSCSI/HDD起動、イジェクト）で回帰なしを確認済み。
 

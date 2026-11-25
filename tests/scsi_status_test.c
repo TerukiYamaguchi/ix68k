@@ -651,7 +651,7 @@ static void test_hdc_select_responds_after_removable_eject(void) {
     printf("test_hdc_select_responds_after_removable_eject: OK\n");
 }
 
-/* T5(実機再現ケース): PDA $81 は「SCSI ID1」ではなく
+/* T5(動作再現ケース): PDA $81 は「SCSI ID1」ではなく
  * 「ID0のLUN1」で、IPLROMはLUNをCDB[1] bit5-7に載せる。修正前はLUNを見て
  * いなかったためID0の実HDDへSeekが通ってGOOD(D0=0)になっていた。 */
 static void test_hdc_nonzero_lun_returns_check_condition(void) {

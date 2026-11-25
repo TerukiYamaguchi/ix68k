@@ -39,7 +39,7 @@ python3 tools-host/debugger/ix68k_debugger.py
 
 | OS | 起動スクリプト | 動作確認 |
 | --- | --- | --- |
-| macOS / Linux | `tools-host/debugger/launch_debugger.sh` | macOS のみ実機確認。Linux はビルドの構文チェックまで |
+| macOS / Linux | `tools-host/debugger/launch_debugger.sh` | macOS のみ動作確認。Linux はビルドの構文チェックまで |
 | Windows | `tools-host\debugger\launch_debugger.cmd` | 未確認（ビルド・実行とも未実施） |
 
 Windows は、コンソール窓を出さずに起動するため、スクリプトのエラーメッセージ（tkinter のある Python が無い等）は見えません。原因を調べるときは、コマンドプロンプトから `tools-host\debugger\launch_debugger.cmd` を直接実行してください。

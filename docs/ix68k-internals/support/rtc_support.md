@@ -120,7 +120,7 @@ MODE/TEST/RESETレジスタ・peek非侵襲性・ワード/ロングアクセス
 CPU RESET非破壊を検証します。
 
 NetBSD/x68k 10.1起動確認済み。
-（`scsi_disk0=liveimage-x68k-with-packages-20250106.hds`）で実機検証済み。
+（`scsi_disk0=liveimage-x68k-with-packages-20250106.hds`）で動作検証済み。
 `rtc0 at intio0 addr 0xe8a000: RP5C15`でattachし、TOD警告3行
 （`preposterous TOD clock time`等）は出ず、rc起動時の`date`出力がホスト実時刻と
 一致することを確認済み（2026-09-10）。

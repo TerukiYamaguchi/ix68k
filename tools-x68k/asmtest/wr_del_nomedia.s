@@ -1,5 +1,5 @@
 | tools-x68k/asmtest/wr_del_nomedia.s -- IOCS _B_WRITED(0x49)/_B_READDL(0x4C)
-| メディアなし実機検証(Issue #166設計書 §5)。FD1(B:, PDA=$91)を排出した状態で
+| メディアなし動作検証(Issue #166設計書 §5)。FD1(B:, PDA=$91)を排出した状態で
 | 呼び出し、D0にNot Ready(ST0 NR)が返ることを確認する。A:(FD0)から実行する。
 |
 | 結果レイアウト($0FF000起点、各4バイトD0):

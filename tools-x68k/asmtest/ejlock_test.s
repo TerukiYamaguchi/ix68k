@@ -1,4 +1,4 @@
-| tools-x68k/asmtest/drvchk_eject_lock_test.s -- Issue #160 Phase 4実機検証
+| tools-x68k/asmtest/drvchk_eject_lock_test.s -- Issue #160 Phase 4動作検証
 | _B_DRVCHK(0x4E) mode=1(イジェクト)がROM内部のロックシャドウ($9E2+drv由来)を
 | 尊重するかを検証する。FD1(B:, PDA=$91)を対象に:
 |   mode=2(ロックON, 推定) -> mode=1(イジェクト試行) -> mode=8(排出検査)

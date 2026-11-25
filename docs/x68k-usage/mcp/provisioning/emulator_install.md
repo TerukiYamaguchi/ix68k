@@ -137,7 +137,7 @@ IPLROM・HUMAN302.XDFは著作権者（シャープ／STUDIO KAMADA・鎌田誠�
 Q3の回答に応じて「手持ちのファイルをコピー」または「`tools-host/cgrom_gen/cgrom_gen.py`で
 東雲フォントから生成」のいずれかで用意する（詳細は4-2参照）。
 
-### 4-1. IPLROM（retropc.net、実機検証済み・MD5一致確認済み 2026-08-14）
+### 4-1. IPLROM（retropc.net、動作検証済み・MD5一致確認済み 2026-08-14）
 
 ```sh
 mkdir -p arc/retropc.net/x68000/software/sharp/x68bios
@@ -161,7 +161,7 @@ Q3で回答が分岐します。いずれの経路でも最終的に`<Q1のデ�
 cp <Q3-2で聞いたパス> <Q1のディレクトリ>/rom/CGROM.DAT
 ```
 
-#### Q3で「いいえ」の場合: 東雲フォントから生成する（実機検証済み 2026-08-14）
+#### Q3で「いいえ」の場合: 東雲フォントから生成する（動作検証済み 2026-08-14）
 
 `tools-host/cgrom_gen/cgrom_gen.py`はゴシック体・明朝体フォント（TTF/OTF/TTC）から実機互換の
 CGROMを合成するクリーンルーム実装ツール（*Inside X68000* p.218-226のCGROMアドレス配置仕様に基づきます。
@@ -194,7 +194,7 @@ python3 tools-host/cgrom_gen/cgrom_gen.py \
 自動検出フォント（`--gothic`/`--mincho`省略）を使いたい場合は`tools-host/cgrom_gen/README.md`
 の「フォントの自動検出」節を参照。
 
-### 4-3. Human68k v3.02 ブートディスク（retropc.net、実機検証済み・MD5一致確認済み 2026-08-14）
+### 4-3. Human68k v3.02 ブートディスク（retropc.net、動作検証済み・MD5一致確認済み 2026-08-14）
 
 ```sh
 mkdir -p arc/retropc.net/x68000/software/sharp/human302

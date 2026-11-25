@@ -595,7 +595,7 @@ static void fdc_exec_complete(fdc_t *f) {
 /* fdc_exec()が設定した実行データフェーズ(FDC_EXEC)を、fdc_read_data()/
  * fdc_write_data()経由で即座に内部ドレインする。通常経路はDMAC ch0の
  * 汎用エンジン(dmac_ch0_fdc_transfer)に置き換わっているため、現在は
- * ch0がCCR STARTで武装されていない異常系（実機計装ではゼロ例外）専用の
+ * ch0がCCR STARTで武装されていない異常系（計装ではゼロ例外）専用の
  * フォールバックとしてのみ使われる。stale registerによる誤転送を避け
  * つつ、FDCコマンドが必ず完了する（結果フェーズへ遷移する）ことを
  * 保証する安全網。 */
@@ -850,7 +850,7 @@ static void fdc_exec(fdc_t *f, uint8_t *ram, uint8_t *crtc_regs) {
         f->phase = FDC_EXEC;
 
         /* DMAC ch0がCCR STARTで武装済みなら汎用エンジンで消費する。非武装
-         * （stale呼び出し等の異常系、実機計装ではゼロ例外）ならフォール
+         * （stale呼び出し等の異常系、計装ではゼロ例外）ならフォール
          * バック(内部ドレイン、MARはCCR経由と同じレジスタを直接参照)に
          * 委ねる（stale register誤転送ガード）。 */
         if (!dmac_ch0_fdc_transfer(f->bus)) {
