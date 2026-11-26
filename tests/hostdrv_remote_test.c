@@ -639,6 +639,175 @@ static void test_delete_nonexistent_fails(void) {
     assert(exec_comcod(buf, 0x45) == -2);
 }
 
+/* ---- 共有フォルダ外へのアクセス防止 ---------------------------------------------------- */
+
+/* ゲストが直接組む _NAMESTS。dir が非NULLなら NAMPTH をその1段にし、主名18バイト欄
+ * （+67の8バイト・+78の10バイト）へ raw を、拡張子欄へ ext をそのまま書く。
+ * set_namests() と違い '.' で主名と拡張子を分けないので、"../X" 等をそのまま入れられる。 */
+static void set_namests_raw(uint8_t *buf, uint32_t addr, const char *dir, const char *raw,
+                            const char *ext) {
+    memset(&buf[addr], 0, 88);
+    uint32_t p = addr + 2;
+    buf[p++] = 0x09;
+    if (dir != NULL) {
+        memcpy(&buf[p], dir, strlen(dir));
+        p += (uint32_t)strlen(dir);
+        buf[p++] = 0x09;
+    }
+    buf[p] = 0;
+    memset(&buf[addr + 67], ' ', 8);
+    memset(&buf[addr + 75], ' ', 3);
+    size_t n = strlen(raw);
+    assert(n <= 18);
+    memcpy(&buf[addr + 67], raw, n > 8 ? 8 : n);
+    if (n > 8)
+        memcpy(&buf[addr + 78], raw + 8, n - 8);
+    memcpy(&buf[addr + 75], ext, strlen(ext));
+}
+
+static int host_path_exists(const char *dir, const char *name) {
+    char path[512];
+    snprintf(path, sizeof(path), "%s/%s", dir, name);
+    struct stat st;
+    return stat(path, &st) == 0;
+}
+
+/* hostdrv_dir 未設定のときは EXEC を処理しない（s_host_dir が空で "/" 起点になるため）。
+ * hostdrv_remote_configure() より前に呼ぶこと。 */
+static void test_unconfigured_exec_is_ignored(void) {
+    uint8_t buf[512] = {0};
+    set_namests(buf, NAMESTS_BASE, "X");
+    set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+    set_be32(&buf[REQ_BASE + 18], 0x12345678u); /* 書き換えられないことを見る番兵 */
+    assert(!hostdrv_remote_is_configured());
+    assert(exec_comcod(buf, 0x41) == 0x12345678); /* _CHDIR */
+}
+
+/* 新しい名前を作る経路（$42/$43/$44/$49）は、区切り文字や ".." を含む名前を
+ * ILLEGAL_FILE_NAME(-13) で拒否し、NAMPTH で解決したディレクトリの外を触らない。
+ * SUB の中から "../ESC" を作らせ、host_dir 直下に何も出来ないことを確かめる。 */
+static void test_new_name_cannot_escape(const char *host_dir) {
+    static const char *const bad_names[] = {"../ESC", "..",  ".",      "A/B",
+                                            "A\\B",   "A:B", "ESC\x01"};
+    char sub[512];
+    snprintf(sub, sizeof(sub), "%s/SUB", host_dir);
+    assert(mkdir(sub, 0777) == 0);
+    write_host_file(sub, "SRC.TXT", "src");
+    char escdir[512];
+    snprintf(escdir, sizeof(escdir), "%s/ESCDIR", host_dir);
+    assert(mkdir(escdir, 0777) == 0);
+
+    for (size_t i = 0; i < sizeof(bad_names) / sizeof(bad_names[0]); i++) {
+        const char *name = bad_names[i];
+        uint8_t buf[1024] = {0};
+
+        /* _NEWFILE / _CREATE */
+        for (uint32_t flag = 0; flag <= 1; flag++) {
+            memset(&buf[REQ_BASE], 0, 26);
+            set_namests_raw(buf, NAMESTS_BASE, "SUB", name, "");
+            set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+            set_be32(&buf[REQ_BASE + 18], flag);
+            set_be32(&buf[REQ_BASE + 22], FCB_BASE);
+            assert(exec_comcod(buf, 0x49) == -13);
+        }
+
+        /* _MKDIR */
+        memset(&buf[REQ_BASE], 0, 26);
+        set_namests_raw(buf, NAMESTS_BASE, "SUB", name, "");
+        set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+        assert(exec_comcod(buf, 0x42) == -13);
+
+        /* _RENAME（移動先の名前） */
+        memset(&buf[REQ_BASE], 0, 26);
+        set_namests_raw(buf, NAMESTS_BASE, "SUB", "SRC", "TXT");
+        set_namests_raw(buf, 700u, "SUB", name, "");
+        set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+        set_be32(&buf[REQ_BASE + 18], 700u);
+        assert(exec_comcod(buf, 0x44) == -13);
+        assert(host_path_exists(sub, "SRC.TXT"));
+    }
+
+    /* 拡張子欄に区切り文字を入れても同じ */
+    {
+        uint8_t buf[512] = {0};
+        set_namests_raw(buf, NAMESTS_BASE, "SUB", "A", "/..");
+        set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+        set_be32(&buf[REQ_BASE + 18], 0);
+        set_be32(&buf[REQ_BASE + 22], FCB_BASE);
+        assert(exec_comcod(buf, 0x49) == -13);
+    }
+
+    /* _RMDIR で SUB の外の空ディレクトリを消せない */
+    {
+        uint8_t buf[512] = {0};
+        set_namests_raw(buf, NAMESTS_BASE, "SUB", "../ESCDIR", "");
+        set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+        assert(exec_comcod(buf, 0x43) == -13);
+        assert(host_path_exists(host_dir, "ESCDIR"));
+    }
+
+    assert(!host_path_exists(host_dir, "ESC"));
+    assert(!host_path_exists(sub, "A"));
+
+    char path[512];
+    snprintf(path, sizeof(path), "%s/SRC.TXT", sub);
+    unlink(path);
+    rmdir(sub);
+    rmdir(escdir);
+}
+
+#ifndef _WIN32
+/* 共有フォルダ内のシンボリックリンクは辿らない（見えない）。リンク経由で外のファイルを
+ * 読めないこと、同名で _CREATE してもリンク先を切り詰めないことを確かめる。 */
+static void test_symlink_is_not_followed(const char *host_dir) {
+    char out_dir[] = "/tmp/hostdrv_remote_out.XXXXXX";
+    assert(mkdtemp(out_dir) != NULL);
+    write_host_file(out_dir, "SECRET.TXT", "secret");
+
+    char link_dir[512], link_file[512], target[512];
+    snprintf(link_dir, sizeof(link_dir), "%s/LINK", host_dir);
+    snprintf(link_file, sizeof(link_file), "%s/FLINK.TXT", host_dir);
+    snprintf(target, sizeof(target), "%s/SECRET.TXT", out_dir);
+    assert(symlink(out_dir, link_dir) == 0);
+    assert(symlink(target, link_file) == 0);
+
+    uint8_t buf[512] = {0};
+    /* ディレクトリへのリンクを NAMPTH に使えない */
+    set_namests_raw(buf, NAMESTS_BASE, "LINK", "SECRET", "TXT");
+    set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+    set_be32(&buf[REQ_BASE + 22], FCB_BASE);
+    buf[FCB_BASE + 14] = 0;
+    assert(exec_comcod(buf, 0x4a) == -3);
+
+    /* ファイルへのリンクを開けない */
+    memset(&buf[REQ_BASE], 0, 26);
+    set_namests(buf, NAMESTS_BASE, "FLINK.TXT");
+    set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+    set_be32(&buf[REQ_BASE + 22], FCB_BASE);
+    assert(exec_comcod(buf, 0x4a) == -2);
+
+    /* 同名の _CREATE でリンク先を切り詰めない */
+    memset(&buf[REQ_BASE], 0, 26);
+    set_namests(buf, NAMESTS_BASE, "FLINK.TXT");
+    set_be32(&buf[REQ_BASE + 14], NAMESTS_BASE);
+    set_be32(&buf[REQ_BASE + 18], 1);
+    set_be32(&buf[REQ_BASE + 22], FCB_BASE);
+    assert(exec_comcod(buf, 0x49) != 0);
+
+    FILE *fp = fopen(target, "rb");
+    assert(fp != NULL);
+    char content[16] = {0};
+    size_t n = fread(content, 1, sizeof(content) - 1, fp);
+    fclose(fp);
+    assert(n == 6 && memcmp(content, "secret", 6) == 0);
+
+    unlink(link_dir);
+    unlink(link_file);
+    unlink(target);
+    rmdir(out_dir);
+}
+#endif
+
 int main(void) {
 #ifdef _WIN32
     char host_dir[300];
@@ -647,6 +816,7 @@ int main(void) {
     char host_dir[] = "/tmp/hostdrv_remote_test.XXXXXX";
 #endif
     assert(mkdtemp(host_dir) != NULL);
+    test_unconfigured_exec_is_ignored();
     hostdrv_remote_configure(host_dir);
 
     test_mediacheck_returns_zero();
@@ -677,6 +847,10 @@ int main(void) {
     test_rename();
     test_delete();
     test_delete_nonexistent_fails();
+    test_new_name_cannot_escape(host_dir);
+#ifndef _WIN32
+    test_symlink_is_not_followed(host_dir);
+#endif
 
     hostdrv_remote_reset();
     char path[512];

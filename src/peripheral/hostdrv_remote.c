@@ -24,6 +24,9 @@
  * 揃えるための別名。POSIX側はネイティブstat()で問題ないためそのまま使う。 */
 #define win_compat_stat stat
 #endif
+#ifndef O_NOFOLLOW
+#define O_NOFOLLOW 0 /* 未定義の環境（Windows）では素通し */
+#endif
 
 /* Human68k属性ワード下位バイト（X68k_OSWORK_Data_Crystal.html FCB表・
  * X68k_DOSCALL_Data_Crystal.html準拠）。 */
@@ -267,11 +270,41 @@ static int32_t hostdrv_errno_to_dos(int err) {
     }
 }
 
+/* ホスト側で1つのパス要素として安全に使える名前か判定する。パターンはゲストメモリ由来で
+ * 任意のバイトを含みうるため、区切り文字（'/'・'\\'・':'）、"."・".."、制御文字を含む名前を
+ * 拒否し、s_host_dir の外を指すパスを組めないようにする。判定はSJIS→UTF-8変換後に行う
+ * （SJIS 2バイト目の0x5Cを'\\'と誤認しないため）。 */
+static int hostdrv_name_is_safe(const char *name) {
+    if (name[0] == '\0' || strcmp(name, ".") == 0 || strcmp(name, "..") == 0)
+        return 0;
+    for (const unsigned char *p = (const unsigned char *)name; *p; p++) {
+        if (*p < 0x20 || *p == 0x7f || *p == '/' || *p == '\\' || *p == ':')
+            return 0;
+    }
+    return 1;
+}
+
+/* base_dir/name がシンボリックリンクなら1を返す。共有フォルダ内のリンクを辿ると
+ * s_host_dir の外を読み書きできてしまうため、HOSTDRVからはリンクを見せない。
+ * Windowsのリパースポイント（ジャンクション等）は未対応。 */
+static int hostdrv_is_symlink(const char *base_dir, const char *name) {
+#ifdef _WIN32
+    (void)base_dir;
+    (void)name;
+    return 0;
+#else
+    char path[600];
+    snprintf(path, sizeof(path), "%s/%s", base_dir, name);
+    struct stat st;
+    return lstat(path, &st) == 0 && S_ISLNK(st.st_mode);
+#endif
+}
+
 /* 18+3形式(空白パディング)のSJISパターンを、UTF-8の"NAME.EXT"文字列へ変換する
- * （$44/$49の新規ファイル名生成用。ワイルドカードを含まない具体名を想定）。
- * SJIS→UTF-8変換に失敗した場合は空文字列を返す。 */
-static void pattern_to_filename(const uint8_t p[HOSTDRV_PATTERN_LEN], char *out,
-                                size_t out_sz) {
+ * （$42/$43/$44/$49の新規ファイル名生成用。ワイルドカードを含まない具体名を想定）。
+ * SJIS→UTF-8変換に失敗した場合、または hostdrv_name_is_safe() を満たさない場合は
+ * 空文字列にして0を返す。成功時は1。 */
+static int pattern_to_filename(const uint8_t p[HOSTDRV_PATTERN_LEN], char *out, size_t out_sz) {
     char sjis[HOSTDRV_PATTERN_LEN + 2];
     size_t n = 0;
     for (int i = 0; i < HOSTDRV_NAME_LEN && p[i] != ' '; i++)
@@ -282,8 +315,11 @@ static void pattern_to_filename(const uint8_t p[HOSTDRV_PATTERN_LEN], char *out,
             sjis[n++] = (char)p[i];
     }
     sjis[n] = '\0';
-    if (sjis_to_utf8(sjis, n, out, out_sz) < 0)
+    if (sjis_to_utf8(sjis, n, out, out_sz) < 0 || !hostdrv_name_is_safe(out)) {
         out[0] = '\0';
+        return 0;
+    }
+    return 1;
 }
 
 /* mtimeをHuman68kの日付・時刻ワード形式（MS-DOS形式と同一）へ変換する。 */
@@ -314,6 +350,8 @@ static int hostdrv_find_name_exact(const char *base_dir,
         if (!name_to_pattern(de->d_name, cand))
             continue;
         if (match_pattern(pattern, cand)) {
+            if (hostdrv_is_symlink(base_dir, de->d_name))
+                continue;
             strncpy(out_name, de->d_name, out_sz - 1);
             out_name[out_sz - 1] = '\0';
             found = 1;
@@ -579,6 +617,8 @@ static void hostdrv_search_collect(hostdrv_search_t *s, const char *base_dir,
             continue;
         if (!match_pattern(pattern, cand))
             continue;
+        if (hostdrv_is_symlink(base_dir, de->d_name))
+            continue;
 
         char path[600];
         snprintf(path, sizeof(path), "%s/%s", base_dir, de->d_name);
@@ -681,7 +721,10 @@ static void hostdrv_remote_exec(hostdrv_remote_t *st, const hostdrv_rd_mem_t *me
         uint8_t pattern[HOSTDRV_PATTERN_LEN];
         namests_read_pattern(mem, namests, pattern);
         char name[128];
-        pattern_to_filename(pattern, name, sizeof(name));
+        if (!pattern_to_filename(pattern, name, sizeof(name))) {
+            mem_write32(mem, req + 18, (uint32_t)-13); /* ILLEGAL_FILE_NAME */
+            break;
+        }
         char path[600];
         snprintf(path, sizeof(path), "%s/%s", parent, name);
         int32_t result = 0;
@@ -700,7 +743,10 @@ static void hostdrv_remote_exec(hostdrv_remote_t *st, const hostdrv_rd_mem_t *me
         uint8_t pattern[HOSTDRV_PATTERN_LEN];
         namests_read_pattern(mem, namests, pattern);
         char name[128];
-        pattern_to_filename(pattern, name, sizeof(name));
+        if (!pattern_to_filename(pattern, name, sizeof(name))) {
+            mem_write32(mem, req + 18, (uint32_t)-13); /* ILLEGAL_FILE_NAME */
+            break;
+        }
         char path[600];
         snprintf(path, sizeof(path), "%s/%s", parent, name);
         int32_t result = 0;
@@ -726,7 +772,10 @@ static void hostdrv_remote_exec(hostdrv_remote_t *st, const hostdrv_rd_mem_t *me
         uint8_t new_pattern[HOSTDRV_PATTERN_LEN];
         namests_read_pattern(mem, new_namests, new_pattern);
         char new_name[128];
-        pattern_to_filename(new_pattern, new_name, sizeof(new_name));
+        if (!pattern_to_filename(new_pattern, new_name, sizeof(new_name))) {
+            mem_write32(mem, req + 18, (uint32_t)-13); /* ILLEGAL_FILE_NAME */
+            break;
+        }
         char new_path[600];
         snprintf(new_path, sizeof(new_path), "%s/%s", new_dir, new_name);
 
@@ -856,13 +905,19 @@ static void hostdrv_remote_exec(hostdrv_remote_t *st, const hostdrv_rd_mem_t *me
         char generated[128];
         const char *use_name = found;
         if (!exists) {
-            pattern_to_filename(pattern, generated, sizeof(generated));
+            if (!pattern_to_filename(pattern, generated, sizeof(generated))) {
+                mem_write32(mem, req + 18, (uint32_t)-13); /* ILLEGAL_FILE_NAME */
+                break;
+            }
             use_name = generated;
         }
 
         char path[600];
         snprintf(path, sizeof(path), "%s/%s", dir, use_name);
-        int flags = O_CREAT | O_RDWR | O_BINARY | (newfile_flag == 0 ? O_EXCL : O_TRUNC);
+        /* hostdrv_find_name_exact() はリンクを返さないため、同名のリンクがあると
+         * exists=0 のまま O_TRUNC で開くことになる。O_NOFOLLOW でリンク先を切り詰めない。 */
+        int flags =
+            O_CREAT | O_RDWR | O_BINARY | O_NOFOLLOW | (newfile_flag == 0 ? O_EXCL : O_TRUNC);
         int fd = open(path, flags, 0666);
         if (fd < 0) {
             mem_write32(mem, req + 18, (uint32_t)hostdrv_errno_to_dos(errno));
@@ -907,7 +962,7 @@ static void hostdrv_remote_exec(hostdrv_remote_t *st, const hostdrv_rd_mem_t *me
          * FILE_WRITE_ATTRIBUTESを常時付与する。 */
         int fd = win_compat_open_hostdrv(path, flags);
 #else
-        int fd = open(path, flags);
+        int fd = open(path, flags | O_NOFOLLOW);
 #endif
         if (fd < 0) {
             mem_write32(mem, req + 18, (uint32_t)-2);
@@ -1142,8 +1197,16 @@ void hostdrv_remote_reg_write8(hostdrv_remote_t *st, const hostdrv_rd_mem_t *mem
                                uint8_t val) {
     switch (off) {
     case 0x02: /* COMMAND */
-        if (val == HOSTDRV_RD_CMD_EXEC)
-            hostdrv_remote_exec(st, mem);
+        if (val != HOSTDRV_RD_CMD_EXEC)
+            return;
+        /* ウィンドウは hostdrv_dir の設定に関係なくバスに出ている。未設定のときは
+         * s_host_dir が空文字列で、ルート "/" 起点のパスを組んでしまうため処理しない
+         * （MAGIC も 0 を返すので、正規の HOSTDRV.SYS はここに来ない）。 */
+        if (!s_configured) {
+            st->status = 0x01u;
+            return;
+        }
+        hostdrv_remote_exec(st, mem);
         return;
     case 0x04:
         st->reg_a5 = (st->reg_a5 & 0x00FFFFFFu) | ((uint32_t)val << 24);

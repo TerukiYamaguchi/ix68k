@@ -209,6 +209,10 @@ int main(void) {
     check(32);
     check(64);
     check(128);
+    /* HOSTDRVは hostdrv_dir 設定時だけEXECを処理する。ここで撃つ$57（メディアチェック）は
+     * ホストのファイルに触れないため、存在しないパスを公開ルートにしておく（誤って
+     * ファイル操作が走っても失敗するだけで、実在するディレクトリを触らない）。 */
+    hostdrv_remote_configure("/nonexistent-ix68k-local-memory-test");
     check_hostdrv_local_memory();
     check_hostdrv_pmmu();
     puts("local_memory_test: OK");
