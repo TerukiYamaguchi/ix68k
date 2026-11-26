@@ -156,10 +156,15 @@ static void mfp_usart_rx_try_load_latch(x68k_bus_t *b) {
 }
 
 /* IERA/IMRA bit4 が揃った初回に armed 化し、キーボード電源投入バイトを FIFO へ積む
- * （実機のキーボードが接続直後に送る $69 相当の初回応答）。 */
+ * （実機のキーボードがリセット・電源投入・再接続時に送る $FF = LED 状態の
+ * 設定要求コード。X68000 サービスマニュアル第6章「キーボードの LED 点灯
+ * 制御」および XEiJ の実装に拠る）。
+ * 以前はここで 0x69 を積んでいたが、0x69 は F7 の make コードであり、
+ * 対応する break (0xE9) が来ないため、ゲスト側の _BITSNS で F7 が
+ * 押下状態のまま固着する不具合の原因になっていた。 */
 static void mfp_usart_rx_arm(x68k_bus_t *b) {
     b->mfp.usart_rx_armed = 1;
-    x68k_bus_mfp_usart_rx_push(b, 0x69u);
+    x68k_bus_mfp_usart_rx_push(b, 0xFFu);
 }
 
 void x68k_bus_mfp_usart_rx_push(x68k_bus_t *b, uint8_t byte) {
