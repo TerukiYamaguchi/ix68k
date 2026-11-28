@@ -328,6 +328,9 @@ function Verify-Zip {
         }
         Die "未解決の依存DLL: $dll"
     }
+    # 個人パス検査は展開直後の中身に対して行う。この後の ix68k-hostfile --help が展開先に
+    # __pycache__\*.pyc（作成元の絶対パス入り）を作るため、試し実行より前に置く（stage.sh と同じ順）。
+    Test-NoUserPath $pkg
     Invoke-Native python @((Join-Path $pkg "$ToolsHostDir\ix68k-hostfile\ix68k-hostfile"), "--help") | Out-Null
     Invoke-Native (Join-Path $pkg "$ToolsHostDir\cgrom_gen\cgrom_gen.exe") @("--version") | Out-Null
     # hu68disk: 空イメージ作成→日本語名ファイル追加→取り出しの往復で動作を確認する
@@ -347,7 +350,6 @@ function Verify-Zip {
     $srExe = Join-Path $pkg "$ToolsHostDir\sram_switch\sram_switch.exe"
     Invoke-Native $srExe @("-f", $sr, "B=2HD0") | Out-Null
     if (-not ((Invoke-Native $srExe @("-f", $sr)) -match "2HD0")) { Die "sram_switch の設定が読み戻せない" }
-    Test-NoUserPath $pkg
     Log "検証OK: $ZipPath"
 }
 
