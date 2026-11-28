@@ -11,12 +11,12 @@
 
 | 項目 | 値 |
 | --- | --- |
-| 採取日 | 2026-11-25（旧リポジトリの作業ツリーにあった更新版。ファイルの更新日時） |
-| ix68k のコミット | 記録なし（旧リポジトリの未コミットの作業ツリーで採取） |
-| mc68000 のコミット | 記録なし |
-| コンパイラ | Apple clang 21.0.0 (clang-2100.4.1.1)（適用に使った版。採取時の版は記録なし） |
-| 学習内容 | 記録なし。前の版（2026-11-13）は GCC.X BENCH 1 回（`disk.cfg` + `x68060.cfg`、68060/50MHz、IC/DC 既定 ON） |
-| ix68k ターゲットの不一致 | 0 件（`profile-instr-out-of-date`。2026-11-25、`stage.sh` のリリースビルドで確認）。前の版は同じソースで 1〜2 関数が不一致だった |
+| 採取日 | 2026-11-28（v20261128 のリリースビルドで `stage.sh` が採り直した） |
+| ix68k のコミット | 70a1b2b |
+| mc68000 のコミット | 62c441f |
+| コンパイラ | Apple clang 21.0.0 (clang-2100.4.1.1)、macOS 26.7.3 |
+| 学習内容 | `tools-host/pgo/train.py` による GCC.X BENCH 1 回（`local/profiles/disk.cfg` + `x68060.cfg`、`SDL_VIDEODRIVER=dummy`、`SDL_AUDIODRIVER=dummy`） |
+| ix68k ターゲットの不一致 | 0 件（`profile-instr-out-of-date`。2026-11-28、`stage.sh` のリリースビルドで確認） |
 | 効果（BENCH ホスト CPU 秒） | 更新版は未測定。前の版（2026-11-13）は、標準 約 30.7 秒 → 約 24.5 秒。hard-overload は標準 約 1,120 フレーム → 0 |
 
 ## ix68k-windows-x64.profdata
