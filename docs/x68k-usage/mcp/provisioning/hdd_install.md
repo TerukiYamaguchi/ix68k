@@ -23,7 +23,7 @@ Human68k ユーザーズマニュアル2.9節「システム、辞書ディス�
 |------|---------|
 | `hu68disk` が使える | リリースZIPでは `tools-host/hu68disk/` にビルド済みの `hu68disk`（Windowsは `hu68disk.exe`）が入っている。ソースから使う場合は `tools-host/hu68disk/` で `make`（`./hu68disk` が生成される） |
 | `sram_switch` が使える（メモリ容量を変える場合のみ必須） | リリースZIPでは `tools-host/sram_switch/` にビルド済みの `sram_switch`（Windowsは `sram_switch.exe`）が入っている。ソースから使う場合は `tools-host/sram_switch/` で `make` |
-| Human68kシステムディスクイメージを入手済み | 例: `disk/HUMAN302.XDF`。著作権上リポジトリに同梱していないため、[QUICKSTART](../../../../QUICKSTART.md)の「ROM・ディスクイメージを用意する」または[emulator_install.md](emulator_install.md)のStep 4-3に従いユーザー自身が用意する |
+| Human68kシステムディスクイメージを入手済み | 例: `disk/HUMAN302.XDF`。著作権上リポジトリに同梱していないため、[QUICKSTART](https://github.com/TerukiYamaguchi/ix68k/blob/main/QUICKSTART.md)の「ROM・ディスクイメージを用意する」または[emulator_install.md](emulator_install.md)のStep 4-3に従いユーザー自身が用意する |
 | （任意）ASK68K辞書ファイル（`X68K.DIC`） | 日本語入力を使う場合。無ければStep 3-2は省略。入手先例: `http://retropc.net/x68000/software/sharp/sxwindow/SXWIN315.LZH`（SX-WINDOW ver3.1 辞書ディスク、`POST.DIC`/`X68K.DIC`収録。無償公開されたシャープのソフトウェア、動作検証済み・2026-08-14） |
 
 **コマンドのパスについて**: 本手順のコマンド例は、リポジトリまたはリリースZIPの展開先をカレント

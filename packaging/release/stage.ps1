@@ -230,6 +230,9 @@ function Assemble-Package {
     Copy-Item (Join-Path $Root "LICENSES") $PkgDir -Recurse
     Copy-Item (Join-Path $Root "profiles\ix68k.cfg.example"), (Join-Path $Root "profiles\keyboard.cfg.example") $PkgDir
     Copy-Item (Join-Path $Root "packaging\release\dist_readme.md") (Join-Path $PkgDir "README.md")
+    # 展開先で起動したAIエージェントが docs\x68k-usage を参照するよう、案内を置く（Claude Code は CLAUDE.md、Codex は AGENTS.md を読む）。
+    Copy-Item (Join-Path $Root "packaging\release\dist_AGENTS.md") (Join-Path $PkgDir "AGENTS.md")
+    Copy-Item (Join-Path $Root "packaging\release\dist_CLAUDE.md") (Join-Path $PkgDir "CLAUDE.md")
     Copy-Item (Join-Path $Root "docs\x68k-usage") (Join-Path $PkgDir "docs") -Recurse
     $license = Join-Path $Root "LICENSE"
     if (Test-Path $license) { Copy-Item $license $PkgDir } else { Log "WARN: LICENSE が未作成のため同梱していない" }
@@ -294,7 +297,7 @@ function Verify-Zip {
         "tools-x68k\hostdrv\HOSTDRV.SYS", "tools-x68k\hostfile\HOSTFILE.X", "tools-x68k\joyget_test\JOYGET_TEST.X",
         "tools-x68k\ged\GED.X", "tools-x68k\aiq\AIQ.X", "tools-x68k\fntadr\FNTADR.X",
         "tools-x68k\hostdrv\README.TXT", "tools-x68k\hostfile\README.TXT", "tools-x68k\joyget_test\README.TXT",
-        "tools-x68k\ged\README.TXT", "tools-x68k\aiq\README.TXT", "tools-x68k\fntadr\README.TXT", "LICENSES\ymfm-BSD-3-Clause.txt", "LICENSES\SoftFloat-BSD-3-Clause.txt", "LICENSES\XEiJ-License.txt", "LICENSES\Sharp-Products-Users-Forum-License.txt", "ix68k.cfg.example", "keyboard.cfg.example", "README.md", ".mcp.json",
+        "tools-x68k\ged\README.TXT", "tools-x68k\aiq\README.TXT", "tools-x68k\fntadr\README.TXT", "LICENSES\ymfm-BSD-3-Clause.txt", "LICENSES\SoftFloat-BSD-3-Clause.txt", "LICENSES\XEiJ-License.txt", "LICENSES\Sharp-Products-Users-Forum-License.txt", "ix68k.cfg.example", "keyboard.cfg.example", "README.md", "AGENTS.md", "CLAUDE.md", ".mcp.json",
         "tools-host\mcp\ix68k_mcp_server.py", "tools-host\mcp\ix68k_wire.py", "tools-host\mcp\pyproject.toml", "tools-host\mcp\uv.lock",
         "tools-host\mcp\MCP_TOOLS.md", "tools-host\mcp\text_profiles", "tools-host\mcp\README.md",
         "tools-host\cgrom_gen\cgrom_gen.exe", "tools-host\cgrom_gen\README.md",

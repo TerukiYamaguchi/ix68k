@@ -23,7 +23,7 @@ Claude Code や LM Studio 等、**ホストのシェルコマンドを実行で�
 ## 将来との違い（重要）
 
 **本番想定（GitHub Releases整備後）は「Releasesからビルド済みアーカイブをダウンロードして展開する」
-だけで完結する**（[QUICKSTART](../../../../QUICKSTART.md)参照）。しかしGitHub Releasesでの
+だけで完結する**（[QUICKSTART](https://github.com/TerukiYamaguchi/ix68k/blob/main/QUICKSTART.md)参照）。しかしGitHub Releasesでの
 ビルド済みバイナリ配布は現在準備中（未公開）のため、本手順では代わりに**このリポジトリの作業ツリーから
 必要なファイルを直接コピーする**ことでビルド済み配布物を再現します。配布開始後は Step 2〜3 が
 「Releasesからダウンロード→展開」に置き換わり、それ以外（ROM入手・設定・起動）は変わらない想定。
@@ -34,7 +34,7 @@ Claude Code や LM Studio 等、**ホストのシェルコマンドを実行で�
 
 | 項目 | 確認方法 |
 |------|---------|
-| このマシンでビルド済み（`build/ix68k`等） | 無ければ[ビルド・実行手順](../../../ix68k-internals/build.md)に従って先にビルドする |
+| このマシンでビルド済み（`build/ix68k`等） | 無ければ[ビルド・実行手順](https://github.com/TerukiYamaguchi/ix68k/blob/main/docs/ix68k-internals/build.md)に従って先にビルドする |
 | `curl` / `unar`（LZH展開）/ `unzip` が使える | `unar -v` / `unzip -v` |
 | retropc.net への接続 | httpsは証明書の検証に失敗するため、URLは`http://retropc.net/...`を使う（Step 4-1・4-3のコマンド参照）。ftp.iij.ad.jp等それ以外の接続先でも`curl`は使わない |
 
@@ -96,7 +96,7 @@ ls build/ix68k build/gamecontrollerdb.txt 2>/dev/null   # macOS/Linux
 ls build_win/ix68k.exe 2>/dev/null                        # Windows
 ```
 
-無ければ[ビルド・実行手順](../../../ix68k-internals/build.md)に従ってビルドしてから次に進みます。
+無ければ[ビルド・実行手順](https://github.com/TerukiYamaguchi/ix68k/blob/main/docs/ix68k-internals/build.md)に従ってビルドしてから次に進みます。
 
 `docs/x68k-usage/mcp/provisioning/hdd_install.md`（SCSI HDDインストール）で使う`hu68disk`・`sram_switch`も
 このマシン限定のホスト側CLIツール（CMakeとは別の独立Makefile）。無ければビルドする:
@@ -290,7 +290,7 @@ MCPサーバ経由で操作可能な場合は`screenshot`ツール等でHuman68k
   ため、Step 3でコピーした`<Q1のディレクトリ>/hu68disk`・`<Q1のディレクトリ>/sram_switch`を使う場合は
   パスを読み替える（`<Q1のディレクトリ>`に`cd`した上で`./hu68disk`・`./sram_switch`、
   ディスクイメージは`disk/<ファイル名>`とする。詳細は同docsの「コマンドのパスについて」参照）。
-- ROM・HUMAN302.XDFは著作権上リポジトリに同梱されていない（[QUICKSTART](../../../../QUICKSTART.md)参照）。本手順は
+- ROM・HUMAN302.XDFは著作権上リポジトリに同梱されていない（[QUICKSTART](https://github.com/TerukiYamaguchi/ix68k/blob/main/QUICKSTART.md)参照）。本手順は
   それらを都度取得する前提。
 - CGROMは既存ファイルを持っていなければ`tools-host/cgrom_gen/cgrom_gen`（東雲フォントのBDF使用）で
   その場生成する（フォントはリポジトリに同梱しない）。詳細・トラブルシュートは

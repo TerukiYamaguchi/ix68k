@@ -2,7 +2,8 @@
 
 X68000 を使い始めるための利用ガイド、アプリ開発資料、MCP対応のAIエージェント向け資料、および
 X68000 上で動くソフトウェアの**操作リファレンス**をまとめます。
-エミュレータ本体の開発資料は `docs/ix68k-internals/` で管理します。
+エミュレータ本体の開発資料は `docs/ix68k-internals/` で管理します（リリースZIPには含まれないため、
+[GitHub](https://github.com/TerukiYamaguchi/ix68k/tree/main/docs/ix68k-internals) で参照します）。
 
 ビルド・起動・MCP操作・資料の使い方の入口は [ix68k マニュアル](manual.md) にあります。
 X68000を初めて使う場合は、まず [guide/](guide/README.md) を読みます。アプリ開発は

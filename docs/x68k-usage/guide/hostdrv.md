@@ -27,7 +27,7 @@ HOSTDRV を有効にすると、指定したホスト側ディレクトリが Hu
 hostdrv_dir = /Users/your-name/x68k-work
 ```
 
-設定例は [profiles/ix68k.cfg.example](../../../profiles/ix68k.cfg.example) にもあります。設定を変更したら
+設定例は [profiles/ix68k.cfg.example](https://github.com/TerukiYamaguchi/ix68k/blob/main/profiles/ix68k.cfg.example) にもあります。設定を変更したら
 ix68k を終了してから再起動します。空の値、または存在しないパスでは HOSTDRV は利用できません。
 
 ## 3. ゲスト側への導入
@@ -105,4 +105,4 @@ HELLO
 | `HOSTDRV: ix68k 以外では組み込めません。` と表示される | ix68k 以外のエミュレータや実機で起動しています。HOSTDRV は ix68k 専用で、ドライブは登録されず、起動は続行します。 |
 
 一般的な媒体・起動の問題は [トラブルシュート](troubleshooting.md) を参照します。内部の構成や対応する
-ファイル要求は、開発者向けの [HOSTDRV リモートデバイス設計](../../ix68k-internals/design/hostdrv_design.md) に記載しています。
+ファイル要求は、開発者向けの [HOSTDRV リモートデバイス設計](https://github.com/TerukiYamaguchi/ix68k/blob/main/docs/ix68k-internals/design/hostdrv_design.md) に記載しています。

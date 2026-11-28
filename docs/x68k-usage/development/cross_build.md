@@ -133,7 +133,7 @@ clean:
 make
 ```
 
-実際の構成は [GhostED の Makefile](../../../tools-x68k/ged/Makefile) を参照してください。複数の
+実際の構成は [GhostED の Makefile](https://github.com/TerukiYamaguchi/ix68k/blob/main/tools-x68k/ged/Makefile) を参照してください。複数の
 ソースファイルでは、各 `.c` を `.o` にコンパイルしてからリンクする規則を追加します。
 
 Windows 公式配布版用の Makefile では、ELF→X の変換をコンパイラドライバへ任せます。

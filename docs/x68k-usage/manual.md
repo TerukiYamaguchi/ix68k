@@ -27,7 +27,7 @@ ix68kの動作には、X68000のIPLROM、CGROM、Human68kのブートディス�
 ### 手動で用意する
 
 インストーラはありません。ROMとディスクイメージを手動で配置します。
-入手方法とCGROMの生成は [QUICKSTART](../../QUICKSTART.md) の「ROM・ディスクイメージを用意する」を
+入手方法とCGROMの生成は [QUICKSTART](https://github.com/TerukiYamaguchi/ix68k/blob/main/QUICKSTART.md) の「ROM・ディスクイメージを用意する」を
 参照します。
 
 配置の例:
@@ -51,7 +51,7 @@ cmake --build build --parallel
 ```
 
 LinuxとWindowsの手順、画面なしで動くヘッドレス版（`ix68k-nogui`）、テストの実行方法は
-[ビルド・実行手順](../ix68k-internals/build.md) を参照します。
+[ビルド・実行手順](https://github.com/TerukiYamaguchi/ix68k/blob/main/docs/ix68k-internals/build.md) を参照します。
 
 ## 4. 起動と終了
 

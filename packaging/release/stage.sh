@@ -224,6 +224,9 @@ assemble_package() {
     cp -R "$ROOT/LICENSES" "$pkg_dir/"
     cp "$ROOT/profiles/ix68k.cfg.example" "$ROOT/profiles/keyboard.cfg.example" "$pkg_dir/"
     cp "$ROOT/packaging/release/dist_readme.md" "$pkg_dir/README.md"
+    # 展開先で起動したAIエージェントが docs/x68k-usage を参照するよう、案内を置く（Claude Code は CLAUDE.md、Codex は AGENTS.md を読む）。
+    cp "$ROOT/packaging/release/dist_AGENTS.md" "$pkg_dir/AGENTS.md"
+    cp "$ROOT/packaging/release/dist_CLAUDE.md" "$pkg_dir/CLAUDE.md"
     cp -R "$ROOT/docs/x68k-usage" "$pkg_dir/docs/"
     if [[ -f "$ROOT/LICENSE" ]]; then
         cp "$ROOT/LICENSE" "$pkg_dir/"
@@ -325,7 +328,7 @@ verify_zip() {
         "LICENSES/SoftFloat-BSD-3-Clause.txt"
         "LICENSES/XEiJ-License.txt"
         "LICENSES/Sharp-Products-Users-Forum-License.txt"
-        "ix68k.cfg.example" "keyboard.cfg.example" "README.md"
+        "ix68k.cfg.example" "keyboard.cfg.example" "README.md" "AGENTS.md" "CLAUDE.md"
         ".mcp.json" "tools-host/mcp/ix68k_mcp_server.py" "tools-host/mcp/ix68k_wire.py" "tools-host/mcp/pyproject.toml"
         "tools-host/mcp/uv.lock" "tools-host/mcp/MCP_TOOLS.md" "tools-host/mcp/text_profiles" "tools-host/mcp/README.md"
         "tools-host/hu68disk/hu68disk" "tools-host/hu68disk/README.md" "tools-host/sram_switch/sram_switch"

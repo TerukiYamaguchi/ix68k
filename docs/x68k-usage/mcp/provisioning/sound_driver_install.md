@@ -30,7 +30,7 @@ HDDイメージ自体の作成は本手順のスコープ外（[hdd_install.md](
 | Human68kが起動する`.HDS`を用意済み | 例: `disk/SYSTEM_HD.HDS`。無ければ[hdd_install.md](hdd_install.md)を先に実施 |
 | `hu68disk` が使える | リリースZIPでは `tools-host/hu68disk/` にビルド済みの `hu68disk`（Windowsは `hu68disk.exe`）が入っている。ソースから使う場合は `tools-host/hu68disk/` で `make`（`./hu68disk` が生成される） |
 | `unar` を導入済み | macOSは `brew install unar`、Linuxはディストリビューションのパッケージ（例: `apt install unar`）。**LZH展開に`lha`を使わない**（Shift-JIS特殊文字を含むファイル名で失敗する） |
-| エミュレータをビルド済み | Step 6の起動確認で使います。未ビルドなら[ビルド・実行手順](../../../ix68k-internals/build.md)を参照 |
+| エミュレータをビルド済み | Step 6の起動確認で使います。未ビルドなら[ビルド・実行手順](https://github.com/TerukiYamaguchi/ix68k/blob/main/docs/ix68k-internals/build.md)を参照 |
 | （Step 3のパッチ適用時のみ）`BUP.X`が対象HDSの`\BIN`に導入済み | [../../freeware/BUP.X.md](../../freeware/BUP.X.md)。バイナリ差分パッチをX68000上で適用するために必要 |
 
 **hu68diskによるHDS書き込みはエミュレータ停止中に行うこと**（起動中に書き換えると

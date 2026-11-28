@@ -26,6 +26,7 @@ dummyドライバのみ）です。ほかの環境は確認していません。
 | `rom/` | IPLROMとCGROMを置くディレクトリ（Windows / Linux。macOSでは使いません） |
 | `disk/` | ディスクイメージを置くディレクトリ（Windows / Linux。macOSでは使いません）。`BLANK.XDF`（フォーマット済みで空の2HDフロッピー、ブート不可。雛形なので、コピーして使ってください）が入っています |
 | `.mcp.json` | Claude Code用のMCPサーバ登録（「AIエージェントから操作する」を参照。隠しファイルです） |
+| `AGENTS.md`、`CLAUDE.md` | AIエージェント向けの案内。展開先で起動したClaude CodeやCodexが自動で読み、`docs/x68k-usage/`の資料に従って操作します |
 | `tools-host/` | ホスト側のツール。`cgrom_gen`（互換CGROMの生成）、`ix68k-hostfile`（ファイル転送）、`mcp/`（MCPサーバ）、`hu68disk`（ディスクイメージの操作）、`sram_switch`（`sram.dat`の設定）、`aiq-bridge`（AIQ.Xのホスト側）など。ツールごとに説明（`README.md`）があります。`aiq-bridge`はmacOS / Linux版だけに入っています（`hu68disk`・`sram_switch`は全OSに入っています） |
 | `tools-x68k/` | Human68k側のツール（`HOSTDRV.SYS`、`GED.X`など）。ツールごとに説明（`README.TXT`。Human68k上で読めるようShift-JISです）があります |
 | `docs/x68k-usage/` | 利用ガイド・ソフトウェア操作リファレンス |
@@ -115,7 +116,8 @@ fd0   = disk/HUMAN302.XDF
 ## AIエージェントから操作する（任意）
 
 導入は上の手順で完了しています。さらに、Claude Codeなどから、ビルドせずにix68kを操作することもできます（MCP）。`uv`を導入し、ix68kを起動してから、
-展開先で`claude`を起動してください（展開先の`.mcp.json`が読み込まれます）。
+展開先で`claude`を起動してください（展開先の`.mcp.json`が読み込まれます）。展開先の`CLAUDE.md`（Codexでは`AGENTS.md`）も
+自動で読まれ、エージェントは`docs/x68k-usage/`の資料を参照して操作します。
 詳しくは`tools-host/mcp/README.md`を参照してください。
 
 ## 資料

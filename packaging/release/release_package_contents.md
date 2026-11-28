@@ -44,6 +44,7 @@ Release workflow・CMakeの `install()` 規則・配布用READMEはこのファ�
 | `tools-host/cgrom_gen/` | C製の `cgrom_gen`（Windowsは `cgrom_gen.exe`。macOS / LinuxはMakefile、WindowsはCMakeでビルドする）と `README.md` | ビットマップフォント（BDF）から互換CGROMを生成するための補助ツール。Pythonは要らない。インストーラは配布しない |
 | `tools-host/mcp/` | `tools-host/mcp/` の `ix68k_mcp_server.py`・`ix68k_wire.py`・`pyproject.toml`・`uv.lock`・`MCP_TOOLS.md`・`text_profiles/` と `README.md`（リポジトリの `tools-host/mcp/` をそのままコピーする） | ソースをビルドせず、`uv` だけでMCPサーバ機能をClaude Code等から使うため |
 | `.mcp.json` | リポジトリ直下の `.mcp.json` をコピーする。`uv run --project tools-host/mcp tools-host/mcp/ix68k_mcp_server.py` を `x68k-emulator` として登録する（展開先で `claude` を起動すれば読まれる） | MCPサーバの登録を手書きさせないため |
+| `AGENTS.md`、`CLAUDE.md` | `packaging/release/dist_AGENTS.md` と `dist_CLAUDE.md`（中身は `@AGENTS.md` の1行）をコピーする。展開先で起動したAIエージェントに、`README.md`・`docs/x68k-usage/`・`tools-host/mcp/MCP_TOOLS.md` を読む順序と守ることを示す（リポジトリの `AGENTS.md` / `CLAUDE.md` は開発者向けのため使わない） | Claude Code は `CLAUDE.md`、Codex は `AGENTS.md` を起動時に自動で読むため。案内が無いと、利用者が指示しない限りエージェントは `docs/x68k-usage/` の参照ルールを読まない |
 | `gamecontrollerdb.txt` | SDLゲームコントローラのマッピングDB | コントローラ入力を認識するため |
 | `ix68k.cfg.example` | `profiles/ix68k.cfg.example` からコピーする利用者向け設定テンプレート | ROM・メディアの配置例と設定開始点を提供するため |
 | `keyboard.cfg.example` | `profiles/keyboard.cfg.example` からコピーするキーボード設定テンプレート | ホストに合うキーボードprofileの設定開始点を提供するため |
@@ -73,7 +74,9 @@ macOSで`.app`をFinderから起動した場合、ix68kは実行ファイルの�
 
 `docs/x68k-usage/` は配下のMarkdown・必要な同梱資料を保ったままディレクトリごとコピーする。
 ソースコードや開発専用資料を含む他の `docs/` サブディレクトリは
-この配布物には含めない。
+この配布物には含めない。そのため `docs/x68k-usage/` から `docs/x68k-usage/` の外（`docs/ix68k-internals/`・
+`QUICKSTART.md`・ソースなど）へのリンクは、相対パスでなく GitHub の URL
+（`https://github.com/TerukiYamaguchi/ix68k/blob/main/...`）で書く。
 
 `rom/` は空のまま、`disk/` は `BLANK.XDF` だけを入れてZIPへ含める。`BLANK.XDF` は `packaging/release/BLANK.XDF`（`hu68disk mkfs` で作った1,261,568バイトのFAT12・0ファイル。ブートセクタはBPBのみでIPLコードを含まない）をコピーする。OEM名 `X68IPL30` は Human68k 3.02 のフォーマットに合わせた文字列で、権利と許諾は `LICENSES/Sharp-Products-Users-Forum-License.txt`（無償配布・ソース公開・文書添付）に従う。
 
